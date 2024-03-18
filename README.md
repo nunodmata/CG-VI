@@ -1,2 +1,2 @@
 # CG-VI
-Repositório para o projeto de Visualização e Iluminação 
+## Repositório para o projeto da unidade currícular de Visualização e Iluminação, inserida no perfil de Computação Gráfica. 

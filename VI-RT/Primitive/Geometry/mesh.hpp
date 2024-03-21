@@ -19,6 +19,8 @@ typedef struct Face {
     Vector geoNormal;           // geometric normal
     bool hasShadingNormals;     // are there per vertex shading normals ??
     int vert_normals_ndx[3];    // indices to veritices normals
+    Vector edge1, edge2; //PODE TER ERRO
+    int FaceID; //PODE TER ERRO
     BB bb;      // face bounding box
                 // this is min={0.,0.,0.} , max={0.,0.,0.} due to the Point constructor
 } Face;

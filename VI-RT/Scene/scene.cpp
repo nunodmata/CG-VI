@@ -61,6 +61,7 @@ static void PrintInfo (const ObjReader myObj) {
 
 bool Scene::Load (const std::string &fname) {
     ObjReader myObjReader;
+    
 
     if (!myObjReader.ParseFromFile(fname)) {
         return false;
@@ -117,6 +118,7 @@ bool Scene::Load (const std::string &fname) {
 
         // add faces and vertices
         std::set<rehash> vert_rehash;
+        int FaceID = 0; //PODE TER ERRO
         for (auto v_it=shp->mesh.indices.begin(); v_it!=shp-> mesh.indices.end() ;) {
             Face *f = new Face;
             Point myVtcs[3];
@@ -145,9 +147,10 @@ bool Scene::Load (const std::string &fname) {
             // add face to mesh: compute the geometric normal
             Vector v1 = myVtcs[0].vec2point(myVtcs[1]);
             Vector v2 = myVtcs[0].vec2point(myVtcs[2]);
-            f->edge1 = v1; f->edge2 = v2;
+            f->edge1 = v1; f->edge2 = v2; //PODE TER ERRO
             Vector normal = v1.cross(v2);
-            f->geoNormal.set(normal.normalize());
+            f->geoNormal.set(normal);
+            f->geoNormal.normalize();
             f->FaceID = FaceID++;
             // add face to mesh
             m->faces.push_back(*f);

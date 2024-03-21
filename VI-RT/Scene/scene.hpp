@@ -15,7 +15,20 @@
 #include "light.hpp"
 #include "ray.hpp"
 #include "intersection.hpp"
+#include "triangle.hpp"
 #include "BRDF.hpp"
+
+typedef struct rehash { //PODE TER ERRO
+    int objNdx;   // Index of the vertex in the original mesh
+    int ourNdx;   // Index of the vertex in our representation
+    // Constructor to initialize objNdx and ourNdx
+    rehash(int objIndex, int ourIndex) : objNdx(objIndex), ourNdx(ourIndex) {}
+    // Comparison operator for set operations
+    bool operator<(const rehash& other) const {
+        return objNdx < other.objNdx;
+    }
+}rehash;
+
 
 class Scene {
     std::vector <Primitive *> prims;

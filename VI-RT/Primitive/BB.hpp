@@ -31,7 +31,30 @@ public:
      * or https://doi.org/10.1007/978-1-4842-7185-8_2
      *
      */
-    bool intersect (Ray r) { return true; }
+    bool intersect (Ray r) { 
+        
+        float tmin = (min.X - r.o.X) / r.dir.X;
+        float tmax = (max.X - r.o.X) / r.dir.X;
+        if (tmin > tmax) std::swap(tmin, tmax);
+
+        float tymin = (min.Y - r.o.Y) / r.dir.Y;
+        float tymax = (max.Y - r.o.Y) / r.dir.Y;
+        if (tymin > tymax) std::swap(tymin, tymax);
+
+        if ((tmin > tymax) || (tymin > tmax)) return false;
+
+        if (tymin > tmin) tmin = tymin;
+        if (tymax < tmax) tmax = tymax;
+
+        float tzmin = (min.Z - r.o.Z) / r.dir.Z;
+        float tzmax = (max.Z - r.o.Z) / r.dir.Z;
+        if (tzmin > tzmax) std::swap(tzmin, tzmax);
+
+
+        if ((tmin > tzmax) || (tzmin > tmax)) return false;    
+        
+        
+        return true; }
 } BB;
 
 #endif /* AABB_hpp */

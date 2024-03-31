@@ -18,6 +18,7 @@
 #include "PointLight.hpp"
 #include "AreaLight.hpp"
 
+#include <filesystem> // Include the filesystem library for directory operations
 #include <time.h>
 
 int main(int argc, const char * argv[]) {
@@ -72,7 +73,10 @@ int main(int argc, const char * argv[]) {
 
     // save the image
     img->Save("MyImage.ppm");
-    
+
+    // Print the directory of the saved image
+    std::cout << "Image saved to: " << std::filesystem::current_path() << "/" << std::endl;
+
     fprintf (stdout, "Rendering time = %.3lf secs\n\n", cpu_time_used);
     
     std::cout << "That's all, folks!" << std::endl;

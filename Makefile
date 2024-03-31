@@ -1,5 +1,6 @@
-CXX      := g++ 
-CXXFLAGS := -std=c++11 -O3
+CXX      := g++
+CXXFLAGS := -std=c++17 -O3
+#CXXFLAGS := -std=c++11 -O3
 LDFLAGS  := 
 BUILD    := ./build
 OBJ_DIR  := $(BUILD)/objects

@@ -10,6 +10,7 @@
 
 #include "vector.hpp"
 #include "ray.hpp"
+#include <algorithm>
 
 typedef struct BB {
 public:

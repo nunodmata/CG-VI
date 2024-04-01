@@ -9,7 +9,7 @@
 #define DistributedShader_hpp
 
 #include "shader.hpp"
-#include "Phong.hpp"
+#include "../Primitive/BRDF/Phong.hpp"
 
 class DistributedShader: public Shader {
     RGB background;

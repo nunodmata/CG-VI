@@ -8,10 +8,10 @@
 #ifndef renderer_hpp
 #define renderer_hpp
 
-#include "camera.hpp"
-#include "scene.hpp"
-#include "image.hpp"
-#include "shader.hpp"
+#include "../Camera/camera.hpp"
+#include "../Scene/scene.hpp"
+#include "../Image/image.hpp"
+#include "../Shader/shader.hpp"
 
 class Renderer {
 protected:

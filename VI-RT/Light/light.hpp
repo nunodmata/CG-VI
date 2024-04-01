@@ -8,8 +8,8 @@
 #ifndef light_hpp
 #define light_hpp
 
-#include "vector.hpp"
-#include "RGB.hpp"
+#include "../utils/vector.hpp"
+#include "../utils/RGB.hpp"
 
 enum LightType {
     NO_LIGHT,

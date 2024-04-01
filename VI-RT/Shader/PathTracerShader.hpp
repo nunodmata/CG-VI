@@ -9,7 +9,7 @@
 #define PathTracerShader_hpp
 
 #include "shader.hpp"
-#include "Phong.hpp"
+#include "../Primitive/BRDF/Phong.hpp"
 
 class PathTracerShader: public Shader {
     RGB background;

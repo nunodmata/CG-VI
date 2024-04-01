@@ -9,7 +9,7 @@
 #define triangle_hpp
 
 #include "geometry.hpp"
-#include "vector.hpp"
+#include "../../utils/vector.hpp"
 #include <math.h>
 
 class Triangle: public Geometry {

@@ -8,10 +8,11 @@
 #include "scene.hpp"
 
 #define TINYOBJLOADER_IMPLEMENTATION
-#include "tiny_obj_loader.h"
-#include "primitive.hpp"
-#include "mesh.hpp"
-#include "Phong.hpp"
+
+#include "tinyobjloader/tiny_obj_loader.h"
+#include "../Primitive/primitive.hpp"
+#include "../Primitive/Geometry/mesh.hpp"
+#include "../Primitive/BRDF/Phong.hpp"
 
 #include <iostream>
 #include <set>

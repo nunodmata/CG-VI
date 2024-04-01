@@ -8,7 +8,7 @@
 #ifndef camera_hpp
 #define camera_hpp
 
-#include "ray.hpp"
+#include "../Rays/ray.hpp"
 
 // based on pbrt book, sec 6.1, pag. 356
 class Camera {

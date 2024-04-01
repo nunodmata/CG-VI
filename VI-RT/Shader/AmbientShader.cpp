@@ -6,7 +6,7 @@
 //
 
 #include "AmbientShader.hpp"
-#include "Phong.hpp"
+#include "../Primitive/BRDF/Phong.hpp"
 
 RGB AmbientShader::shade(bool intersected, Intersection isect, int depth) {
     RGB color(0.,0.,0.);

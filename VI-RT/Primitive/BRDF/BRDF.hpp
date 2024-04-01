@@ -8,8 +8,8 @@
 #ifndef BRDF_hpp
 #define BRDF_hpp
 
-#include "vector.hpp"
-#include "RGB.hpp"
+#include "../../utils/vector.hpp"
+#include "../../utils/RGB.hpp"
 
 typedef enum {
     SPECULAR_REF=1,

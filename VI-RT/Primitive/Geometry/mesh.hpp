@@ -9,7 +9,7 @@
 #define mesh_hpp
 
 #include "geometry.hpp"
-#include "vector.hpp"
+#include "../../utils/vector.hpp"
 #include <vector>
 
 // partially inspired in pbrt book (3rd ed.), sec 3.6, pag 152

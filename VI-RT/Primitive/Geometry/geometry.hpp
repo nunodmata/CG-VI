@@ -8,9 +8,9 @@
 #ifndef geometry_hpp
 #define geometry_hpp
 
-#include "BB.hpp"
-#include "ray.hpp"
-#include "intersection.hpp"
+#include "../BB.hpp"
+#include "../../Rays/ray.hpp"
+#include "../../Rays/intersection.hpp"
 
 class Geometry {
 public:

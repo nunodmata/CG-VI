@@ -6,8 +6,8 @@
 //
 
 #include "WhittedShader.hpp"
-#include "Phong.hpp"
-#include "ray.hpp"
+#include "../Primitive/BRDF/Phong.hpp"
+#include "../Rays/ray.hpp"
 
 RGB WhittedShader::directLighting (Intersection isect, Phong *f) {
     RGB color(0.,0.,0.);

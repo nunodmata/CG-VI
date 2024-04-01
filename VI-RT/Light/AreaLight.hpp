@@ -9,7 +9,7 @@
 #define AreaLight_hpp
 
 #include "light.hpp"
-#include "triangle.hpp"
+#include "../Primitive/Geometry/triangle.hpp"
 #include <math.h>
 
 class AreaLight: public Light {

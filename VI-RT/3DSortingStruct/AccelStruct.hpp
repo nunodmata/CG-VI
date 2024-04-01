@@ -8,9 +8,9 @@
 #ifndef AccelStruct_hpp
 #define AccelStruct_hpp
 
-#include "Ray.hpp"
-#include "Intersection.hpp"
-#include "Scene.hpp"
+#include "../Rays/ray.hpp"
+#include "../Rays/intersection.hpp"
+#include "../Scene/scene.hpp"
 
 class AccelStruct {
     public:

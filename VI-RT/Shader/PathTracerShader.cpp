@@ -6,9 +6,9 @@
 //
 
 #include "PathTracerShader.hpp"
-#include "Phong.hpp"
-#include "ray.hpp"
-#include "AreaLight.hpp"
+#include "../Primitive/BRDF/Phong.hpp"
+#include "../Rays/ray.hpp"
+#include "../Light/AreaLight.hpp"
 #include <stdlib.h>
 #include <math.h>
 

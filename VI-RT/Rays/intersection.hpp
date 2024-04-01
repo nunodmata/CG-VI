@@ -8,8 +8,8 @@
 #ifndef Intersection_hpp
 #define Intersection_hpp
 
-#include "vector.hpp"
-#include "BRDF.hpp"
+#include "../utils/vector.hpp"
+#include "../Primitive/BRDF/BRDF.hpp"
 
 typedef struct Intersection {
 public:

@@ -8,8 +8,8 @@
 #ifndef BB_hpp
 #define BB_hpp
 
-#include "vector.hpp"
-#include "ray.hpp"
+#include "../utils/vector.hpp"
+#include "../Rays/ray.hpp"
 #include <algorithm>
 
 typedef struct BB {

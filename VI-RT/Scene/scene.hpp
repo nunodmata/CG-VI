@@ -8,15 +8,12 @@
 #ifndef Scene_hpp
 #define Scene_hpp
 
-#include <iostream>
-#include <string>
-#include <vector>
-#include "primitive.hpp"
-#include "light.hpp"
-#include "ray.hpp"
-#include "intersection.hpp"
-#include "triangle.hpp"
-#include "BRDF.hpp"
+#include "../Primitive/primitive.hpp"
+#include "../Light/light.hpp"
+#include "../Rays/ray.hpp"
+#include "../Rays/intersection.hpp"
+#include "../Primitive/Geometry/triangle.hpp"
+#include "../Primitive/BRDF/BRDF.hpp"
 
 typedef struct rehash { //PODE TER ERRO
     int objNdx;   // Index of the vertex in the original mesh

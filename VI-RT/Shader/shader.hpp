@@ -8,8 +8,8 @@
 #ifndef shader_hpp
 #define shader_hpp
 
-#include "scene.hpp"
-#include "RGB.hpp"
+#include "../Scene/scene.hpp"
+#include "../utils/RGB.hpp"
 
 class Shader {
 protected:

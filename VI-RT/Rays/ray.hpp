@@ -8,7 +8,7 @@
 #ifndef Ray_hpp
 #define Ray_hpp
 
-#include "vector.hpp"
+#include "../utils/vector.hpp"
 
 const float EPSILON=1e-3;
 

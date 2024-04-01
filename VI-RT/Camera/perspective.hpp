@@ -9,8 +9,8 @@
 #define perspective_hpp
 
 #include "camera.hpp"
-#include "ray.hpp"
-#include "vector.hpp"
+#include "../Rays/ray.hpp"
+#include "../utils/vector.hpp"
 
 class Perspective: public Camera {
     Point Eye, At;
@@ -19,7 +19,7 @@ class Perspective: public Camera {
     int W, H;
     float c2w[3][3];  // camera 2 world transform
 public:
-    Perspective (const Point Eye, const Point At, const Vector Up, const int W, const int H, const float fovW, const float fovH): Eye(Eye), At(At), Up(Up), W(W), H(H), fovW(fovW), fovH(fovH)  {
+    Perspective ( Point Eye, Point At, const Vector Up, const int W, const int H, const float fovW, const float fovH): Eye(Eye), At(At), Up(Up), W(W), H(H), fovW(fovW), fovH(fovH)  {
         // compute camera 2 world transform
          //Camera Setup
          Vector f = Eye.vec2point(At);

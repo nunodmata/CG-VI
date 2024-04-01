@@ -9,7 +9,7 @@
 #define WhittedShader_hpp
 
 #include "shader.hpp"
-#include "Phong.hpp"
+#include "../Primitive/BRDF/Phong.hpp"
 
 class WhittedShader: public Shader {
     RGB background;

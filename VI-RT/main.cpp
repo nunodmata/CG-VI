@@ -6,17 +6,17 @@
 //
 
 #include <iostream>
-#include "scene.hpp"
-#include "perspective.hpp"
-#include "StandardRenderer.hpp"
-#include "ImagePPM.hpp"
-#include "AmbientShader.hpp"
-#include "WhittedShader.hpp"
-#include "DistributedShader.hpp"
-#include "PathTracerShader.hpp"
-#include "AmbientLight.hpp"
-#include "PointLight.hpp"
-#include "AreaLight.hpp"
+#include "Scene/scene.hpp"
+#include "Camera/perspective.hpp"
+#include "Renderer/StandardRenderer.hpp"
+#include "Image/ImagePPM.hpp"
+#include "Shader/AmbientShader.hpp"
+#include "Shader/WhittedShader.hpp"
+#include "Shader/DistributedShader.hpp"
+#include "Shader/PathTracerShader.hpp"
+#include "Light/AmbientLight.hpp"
+#include "Light/PointLight.hpp"
+#include "Light/AreaLight.hpp"
 
 #include <filesystem> // Include the filesystem library for directory operations
 #include <time.h>

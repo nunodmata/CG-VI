@@ -7,7 +7,7 @@
 
 #ifndef BRDF_hpp
 #define BRDF_hpp
-
+#include <string>
 #include "../../utils/vector.hpp"
 #include "../../utils/RGB.hpp"
 

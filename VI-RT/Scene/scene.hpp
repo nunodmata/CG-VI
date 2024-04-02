@@ -8,6 +8,8 @@
 #ifndef Scene_hpp
 #define Scene_hpp
 
+#include <iostream>
+
 #include "../Primitive/primitive.hpp"
 #include "../Light/light.hpp"
 #include "../Rays/ray.hpp"

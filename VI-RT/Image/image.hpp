@@ -35,7 +35,10 @@ public:
         imagePlane[y*W+x] += rgb;
         return true;
     }
-    bool Save (std::string filename) {return true;}
+    virtual bool Save (std::string filename) {return true;}
+    RGB getPixel(int x, int y) const {
+        return imagePlane[y * W + x];
+}
 };
 
 #endif /* image_hpp */

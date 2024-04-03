@@ -164,6 +164,86 @@ bool Scene::Load (const std::string &fname) {
     return true;
 }
 
+
+// bool Scene::Load (const std::string &fname) {
+//     ObjReader myObjReader;
+
+//     if (!myObjReader.ParseFromFile(fname)) {
+//         std::cout << "Failed to load .obj file!";
+//         return false;
+//     }
+
+//     PrintInfo (myObjReader);
+
+//     const tinyobj::attrib_t attrib = myObjReader.GetAttrib();
+//     const std::vector<shape_t> shapes = myObjReader.GetShapes();
+//     const std::vector<material_t> materials = myObjReader.GetMaterials();
+
+//     for (auto mat = materials.begin(); mat != materials.end(); mat++){
+//         auto *m = new Phong();
+
+//         m->Ka = RGB(mat->ambient[0],mat->ambient[1], mat->ambient[2]);
+//         m->Kd = RGB(mat->diffuse[0],mat->diffuse[1], mat->diffuse[2]);
+//         m->Ks = RGB(mat->specular[0],mat->specular[1], mat->specular[2]);
+//         m->Kt = RGB(mat->transmittance[0],mat->transmittance[1], mat->transmittance[2]);
+
+//         this->BRDFs.push_back(m);
+//         this->numBRDFs++;
+//     }
+
+//     // Load shapes
+//     for (auto shp = shapes.begin(); shp != shapes.end() ; shp++) {
+
+//         // for each shape create a primitive (Mesh + material_ndx)
+
+//         auto *prim = new Primitive();
+//         Mesh *mesh = new Mesh();
+//         prim->g = mesh;
+
+//         // iterate shapes
+//         for (auto ver = shp->mesh.indices.begin(); ver != shp->mesh.indices.end();) {
+
+//             // Create a new face for the mesh
+//             Face *face = new Face();
+
+//             face->bb.min = Point(0,0,0);
+//             face->bb.max = Point(0,0,0);
+
+//             // Loop over vertices in the face.
+//             for (size_t v = 0; v < 3; v++) {
+
+//                 // access to vertex
+//                 tinyobj::real_t vx = attrib.vertices[3*ver->vertex_index];
+//                 tinyobj::real_t vy = attrib.vertices[3*ver->vertex_index+1];
+//                 tinyobj::real_t vz = attrib.vertices[3*ver->vertex_index+2];
+
+//                 Point ver_now = Point(vx,vy,vz);
+//                 int index = mesh->get_index(ver_now);
+//                 if(index != -1) face->vert_ndx[v] = index;
+//                 else {
+//                     mesh->vertices.push_back(ver_now);
+//                     mesh->numVertices++;
+//                     face->vert_ndx[v] = mesh->numVertices-1;
+//                 }
+//                 face->bb.update(ver_now);
+//                 mesh->bb.update(ver_now);
+
+//                 ver++;
+//             }
+
+//             mesh->faces.push_back(*face);
+//             mesh->numFaces++;
+//         }
+
+//         prim->material_ndx = shp->mesh.material_ids[0];
+//         prims.push_back(prim);
+//         numPrimitives++;
+//     }
+
+//     return true;
+// }
+
+
 bool Scene::trace (Ray r, Intersection *isect) {
     Intersection curr_isect;
     bool intersection = false;    

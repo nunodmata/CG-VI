@@ -38,6 +38,16 @@ public:
     bool intersect (Ray r, Intersection *isect);
     
     Mesh(): numFaces(0), numVertices(0), numNormals(0) {}
+    
+    // int get_index(Point vertex) {
+
+    //     int res = -1;
+    //     for(int ver = 0; ver < numVertices; ver++){
+    //         if(vertex.X == vertices[ver].X && vertex.Y == vertices[ver].Y && vertex.Z == vertices[ver].Z) res = ver;
+    //     }
+
+    //     return res;
+    // }
 };
 
 #endif /* mesh_hpp */

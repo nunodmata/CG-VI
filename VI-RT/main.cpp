@@ -46,13 +46,13 @@ int main(int argc, const char * argv[]) {
     scene.numLights++;
     
     // Image resolution
-    const int W= 640;
-    const int H= 480;
+    const int W= 1024;
+    const int H= 1024;
     
     img = new ImagePPM(W,H);
     
     // Camera parameters
-    const Point Eye ={0,0,0}, At={0,0,1};
+    const Point Eye ={280,275,-330}, At={280,265,0};
     const Vector Up={0,1,0};
     const float fovW = 90.f;
     const float fovH = fovW * (float)H/(float)W;  // in degrees

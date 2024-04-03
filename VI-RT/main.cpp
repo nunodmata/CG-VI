@@ -63,7 +63,7 @@ int main(int argc, const char * argv[]) {
     RGB background(0.05, 0.05, 0.55);
     shd = new AmbientShader(&scene, background);
     // declare the renderer
-    int spp=1;     // samples per pixel
+    int spp=16;     // samples per pixel
     StandardRenderer myRender (cam, &scene, img, shd, spp);
     // render
     start = clock();

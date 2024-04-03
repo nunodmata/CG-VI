@@ -31,7 +31,7 @@ static void PrintInfo (const ObjReader myObj) {
 
     std::cout << "# of shapes    : " << shapes.size() << std::endl;
     std::cout << "# of materials : " << materials.size() << std::endl;
-    
+        
     // Iterate shapes
     auto it_shape = shapes.begin();
     for ( ; it_shape != shapes.end() ; it_shape++) {
@@ -43,6 +43,7 @@ static void PrintInfo (const ObjReader myObj) {
         for ( ; it_vertex != it_shape->mesh.indices.end() ; ) {
             // process 3 vertices
             for (int v=0 ; v<3 ; v++) {
+                
                 std::cout << it_vertex->vertex_index;
                 it_vertex++;
             }
@@ -52,6 +53,20 @@ static void PrintInfo (const ObjReader myObj) {
         
         printf("There are %lu material indexes\n", it_shape->mesh.material_ids.size());
     }
+
+    // Print vertices
+std::cout << "Vertices:\n";
+for (size_t v = 0; v < attrib.vertices.size(); v += 3) {
+    std::cout << "Vertex " << v/3 << ": (" << attrib.vertices[v] << ", " << attrib.vertices[v+1] << ", " << attrib.vertices[v+2] << ")\n";
+}
+
+// Print faces
+std::cout << "\nFaces:\n";
+for (const auto& shape : shapes) {
+    for (size_t f = 0; f < shape.mesh.indices.size(); f += 3) {
+        std::cout << "Face " << f/3 << ": (" << shape.mesh.indices[f].vertex_index << ", " << shape.mesh.indices[f+1].vertex_index << ", " << shape.mesh.indices[f+2].vertex_index << ")\n";
+    }
+}
     
 }
 
@@ -68,8 +83,9 @@ bool Scene::Load (const std::string &fname) {
         return false;
     }
     
-    //PrintInfo (myObjReader);
+    PrintInfo (myObjReader);
 
+    
     // convert loader's representation to my representation
     const std::vector<material_t> materials = myObjReader.GetMaterials();
     for (auto it = materials.begin() ; it != materials.end() ; it++) {

@@ -75,7 +75,7 @@ int main(int argc, const char * argv[]) {
     img->Save("MyImage.ppm");
 
     // Print the directory of the saved image
-    std::cout << "Image saved to: " << std::filesystem::current_path() << "/" << std::endl;
+    std::cout << "Image saved to: " << std::filesystem::current_path() << std::endl;
 
     fprintf (stdout, "Rendering time = %.3lf secs\n\n", cpu_time_used);
     

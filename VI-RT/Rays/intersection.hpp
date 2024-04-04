@@ -14,6 +14,7 @@
 typedef struct Intersection {
 public:
     Point p;
+    float uv[2];
     Vector gn;  // geometric normal
     Vector sn;  // shading normal (the same as gn for the time being)
     Vector wo;

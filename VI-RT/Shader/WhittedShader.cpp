@@ -8,6 +8,7 @@
 #include "WhittedShader.hpp"
 #include "../Primitive/BRDF/Phong.hpp"
 #include "../Rays/ray.hpp"
+#include "../Scene/scene.hpp"
 
 RGB WhittedShader::directLighting (Intersection isect, Phong *f) {
     RGB color(0.,0.,0.);
@@ -23,16 +24,51 @@ RGB WhittedShader::directLighting (Intersection isect, Phong *f) {
             continue;
         }
         if ((*l)->type == POINT_LIGHT) {  // is it a point light ?
-            // ...
+            if (!f->Kd.isZero()) {
+                Point lpoint;
+                // get the position and radiance of the light source
+                RGB L = (*l)->Sample_L(NULL, &lpoint);
+                // compute the direction from the intersection to the light
+                Vector Ldir = isect.p.vec2point(lpoint);
+                const float Ldistance = Ldir.norm();
+                Ldir.normalize(); // now normalize Ldir
+                // compute the cosine (Ldir , shading normal)
+                float cosL = Ldir.dot(isect.sn);
+                if (cosL > 0.) { // the light is NOT behind the primitive
+                    // Add check to make sure the normal vector is pointing towards the Point Light
+                    if (Ldir.dot(isect.sn) > 0) {
+                        // generate the shadow ray
+                        Ray shadow(isect.p, Ldir);
+                        // adjust origin EPSILON along the normal: avoid self occlusion
+                        shadow.adjustOrigin(isect.gn);
+                        if (scene->visibility(shadow, Ldistance - EPSILON)) { // light source not occluded
+                            RGB Kd = f->Kd;
+                            if(f->texHeigth) {
+                                Kd = f->sampleTexture(isect.uv[0], isect.uv[1]);
+                            }
+                            color += Kd * L * cosL;
+                        }
+                    }
+                } // end cosL > 0.
+            }
+            continue;
         }
     }
     return color;
 }
 
 RGB WhittedShader::specularReflection (Intersection isect, Phong *f, int depth) {
-    RGB color(0.,0.,0.);
-    
-    // ...
+    // generate the specular ray
+    float cos = isect.gn.dot(isect.wo);
+    Vector Rdir = 2.f * cos * isect.gn - isect.wo;
+    Ray specular(isect.p, Rdir);
+    specular.adjustOrigin(isect.gn);
+    Intersection s_isect;
+    // trace ray
+    bool intersected = scene->trace(specular, &s_isect);
+    // shade this intersection
+    RGB color = shade (intersected, s_isect, 0);
+    return color;
     return color;
 }
 

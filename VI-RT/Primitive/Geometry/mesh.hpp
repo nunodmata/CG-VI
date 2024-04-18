@@ -28,6 +28,7 @@ typedef struct Face {
 class Mesh: public Geometry {
 private:
     bool TriangleIntersect (Ray r, Face f, Intersection *isect);
+    void GetUVs(Point uv[3]);
 public:
     int numFaces;
     std::vector<Face> faces;
@@ -36,18 +37,14 @@ public:
     int numNormals;
     std::vector<Vector> normals;
     bool intersect (Ray r, Intersection *isect);
-    
-    Mesh(): numFaces(0), numVertices(0), numNormals(0) {}
-    
-    // int get_index(Point vertex) {
+    void addVertice(Point p);
 
-    //     int res = -1;
-    //     for(int ver = 0; ver < numVertices; ver++){
-    //         if(vertex.X == vertices[ver].X && vertex.Y == vertices[ver].Y && vertex.Z == vertices[ver].Z) res = ver;
-    //     }
-
-    //     return res;
-    // }
+    int getIndexVertices(Point K);
+    
+    Mesh(): numFaces(0), numVertices(0), numNormals(0) {
+        //this->bb.min = Point(MAXFLOAT,MAXFLOAT,MAXFLOAT);
+        //this->bb.max = Point(-MAXFLOAT,-MAXFLOAT,-MAXFLOAT);
+    }
 };
 
 #endif /* mesh_hpp */

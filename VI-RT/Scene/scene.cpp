@@ -18,6 +18,7 @@
 #include <set>
 #include <vector>
 
+using namespace std;
 using namespace tinyobj;
 
 static void PrintInfo (const ObjReader myObj) {
@@ -77,209 +78,140 @@ for (const auto& shape : shapes) {
 
 bool Scene::Load (const std::string &fname) {
     ObjReader myObjReader;
-    
 
     if (!myObjReader.ParseFromFile(fname)) {
+        printf("Failed to load .obj file: %s\n", fname.c_str());
         return false;
     }
-    
-    PrintInfo (myObjReader);
+    const tinyobj::attrib_t attrib = myObjReader.GetAttrib();
+    vector<float> vertices = attrib.vertices;
 
-    
-    // convert loader's representation to my representation
+    const std::vector<shape_t> shps = myObjReader.GetShapes();
     const std::vector<material_t> materials = myObjReader.GetMaterials();
-    for (auto it = materials.begin() ; it != materials.end() ; it++) {
-        Phong *mat = new Phong;
-        // Ka
-        mat->Ka.R = it->ambient[0];
-        mat->Ka.G = it->ambient[1];
-        mat->Ka.B = it->ambient[2];
-        // Kd
-        mat->Kd.R = it->diffuse[0];
-        mat->Kd.G = it->diffuse[1];
-        mat->Kd.B = it->diffuse[2];
-        // Ns
-        mat->Ns = it->shininess;
-        // Ks
-        mat->Ks.R = it->specular[0];
-        mat->Ks.G = it->specular[1];
-        mat->Ks.B = it->specular[2];
-        // Kt
-        mat->Kt.R = it->transmittance[0];
-        mat->Kt.G = it->transmittance[1];
-        mat->Kt.B = it->transmittance[2];
+    for (auto mat = materials.begin(); mat != materials.end(); mat++){
+        auto *m = new Phong();
 
-
-        BRDFs.push_back (mat);
-        numBRDFs++;
+        m->Kd =RGB(mat->diffuse[0],mat->diffuse[1], mat->diffuse[2]);
+        m->Ks =RGB(mat->specular[0],mat->specular[1], mat->specular[2]);
+        printf("specular %f %f %f\n",mat->specular[0],mat->specular[1], mat->specular[2]);
+        m->Ka = RGB(mat->ambient[0],mat->ambient[1], mat->ambient[2]);
+        m->Kt = RGB(mat->transmittance[0],mat->transmittance[1], mat->transmittance[2]);
+        m->Ns = mat->shininess;
+        this->BRDFs.push_back(m);
+        this->numBRDFs++;
     }
 
-    // access the vertices
-    const tinyobj::attrib_t attrib = myObjReader.GetAttrib();
-    std::vector<float> vtcs = attrib.vertices;
-    // access the shapes (each shape is one mesh)
-    const std::vector<shape_t> shps = myObjReader.GetShapes();
 
-    // iterate over shapes (meshes)
+
+    // iterate over shapes
     for (auto shp = shps.begin() ; shp != shps.end() ; shp++) {
-        Primitive *p = new Primitive;
-        Mesh *m = new Mesh;
-        p->g = m;
-        // assume all faces in the mesh have the same material
-        p->material_ndx = shp->mesh.material_ids[0];
-        // the primitive's geometry bounding box is computed on the fly
-        // initially set BB.min and BB.max to be the first vertex
-        const int V1st = shp->mesh.indices.begin()->vertex_index * 3;
-        m->bb.min.set(vtcs[V1st], vtcs[V1st+1], vtcs[V1st+2]);
-        m->bb.max.set(vtcs[V1st], vtcs[V1st+1], vtcs[V1st+2]);
 
-        // add faces and vertices
-        std::set<rehash> vert_rehash;
-        int FaceID = 0; //PODE TER ERRO
-        for (auto v_it=shp->mesh.indices.begin(); v_it!=shp-> mesh.indices.end() ;) {
-            Face *f = new Face;
-            Point myVtcs[3];
-        // process 3 vertices
-            for (int v=0 ; v<3 ; v++) {
-                const int objNdx = v_it->vertex_index;
-                myVtcs[v].set(vtcs[objNdx*3], vtcs[objNdx*3+1], vtcs[objNdx*3+2]);
-                if (v==0) {
-                    f->bb.min.set(myVtcs[0].X, myVtcs[0].Y, myVtcs[0].Z);
-                    f->bb.max.set (myVtcs[0].X, myVtcs[0].Y, myVtcs[0].Z);
-                } else f->bb.update(myVtcs[v]);
-                // add vertex to mesh if new
-                rehash new_vert={objNdx, 0};
-                auto known_vert = vert_rehash.find(new_vert);
-                if (known_vert == vert_rehash.end()) { // new vertice, add it to the mesh
-                    new_vert.ourNdx = m->numVertices;
-                    vert_rehash.insert(new_vert);
-                    m->vertices.push_back(myVtcs[v]);
-                    m->numVertices++;
-                    // register in the face
-                    f->vert_ndx[v] = new_vert.ourNdx;
-                    m->bb.update(myVtcs[v]);
-                } else f->vert_ndx[v] = known_vert->ourNdx;
-                v_it++; // next vértice within this face (there are 3)
-            }// end vertices
-            // add face to mesh: compute the geometric normal
-            Vector v1 = myVtcs[0].vec2point(myVtcs[1]);
-            Vector v2 = myVtcs[0].vec2point(myVtcs[2]);
-            f->edge1 = v1; f->edge2 = v2; //PODE TER ERRO
-            Vector normal = v1.cross(v2);
-            f->geoNormal.set(normal);
-            f->geoNormal.normalize();
-            f->FaceID = FaceID++;
-            // add face to mesh
-            m->faces.push_back(*f);
-            m->numFaces++;
-        }// end iterate vértices in the mesh (shape)
-        // add primitive to scene
-        prims.push_back(p); numPrimitives++;
-    }// end iterate over shapes
+        auto *p = new Primitive ();
+        Mesh* mesh = new Mesh();
+        p->g = mesh;
+
+        // iterate over this shape’s vertices
+        auto indices = shp->mesh.indices;
+        p->material_ndx= shp->mesh.material_ids[0];
+
+
+        for (auto vertex = indices.begin() ; vertex != indices.end() ; ) {
+            Face* face = new Face();
+            //face->bb.min = Point(MAXFLOAT, MAXFLOAT, MAXFLOAT);
+            //face->bb.max = Point(-MAXFLOAT, -MAXFLOAT, -MAXFLOAT);
+            // each 3 consecutives vertices form a face (triangle)
+
+            Point myVertex[3];
+            for (int v = 0 ; v<3 ; v++ , vertex++) {
+                // get each vertex XYZ
+                const int objNdx = vertex->vertex_index;
+                myVertex[v].X = vertices[objNdx*3];
+                myVertex[v].Y = vertices[objNdx*3+1];
+                myVertex[v].Z = vertices[objNdx*3+2];
+                int index = mesh->getIndexVertices(myVertex[v]);
+                if (index != -1) face->vert_ndx[v] = index;
+                else{
+                    mesh->addVertice(myVertex[v]);
+                    face->vert_ndx[v] = mesh->numVertices-1;
+
+                }
+                face->bb.update(myVertex[v]);
+            }
+
+            //calculate normal of face
+            Vector edge1 = mesh->vertices[face->vert_ndx[1]].vec2point(mesh->vertices[face->vert_ndx[0]]);
+            Vector edge2 = mesh->vertices[face->vert_ndx[2]].vec2point(mesh->vertices[face->vert_ndx[0]]);
+            face->geoNormal = edge1.cross(edge2);
+            face->geoNormal.normalize(); // ?
+
+
+
+            //float fx = face->geoNormal.X == -0 ? 0 : face->geoNormal.X;
+            //float fy= face->geoNormal.Y == -0 ? 0 : face->geoNormal.Y;
+            //float fz = face->geoNormal.Z == -0 ? 0 : face->geoNormal.Z;
+            //face->geoNormal = Vector(fx,fy,fz);
+
+
+            mesh->faces.push_back(*face);
+            mesh->numFaces++;
+        }
+        this->prims.push_back(p);
+        this->numPrimitives++;
+    }
+
 
     return true;
 }
-
-
-// bool Scene::Load (const std::string &fname) {
-//     ObjReader myObjReader;
-
-//     if (!myObjReader.ParseFromFile(fname)) {
-//         std::cout << "Failed to load .obj file!";
-//         return false;
-//     }
-
-//     PrintInfo (myObjReader);
-
-//     const tinyobj::attrib_t attrib = myObjReader.GetAttrib();
-//     const std::vector<shape_t> shapes = myObjReader.GetShapes();
-//     const std::vector<material_t> materials = myObjReader.GetMaterials();
-
-//     for (auto mat = materials.begin(); mat != materials.end(); mat++){
-//         auto *m = new Phong();
-
-//         m->Ka = RGB(mat->ambient[0],mat->ambient[1], mat->ambient[2]);
-//         m->Kd = RGB(mat->diffuse[0],mat->diffuse[1], mat->diffuse[2]);
-//         m->Ks = RGB(mat->specular[0],mat->specular[1], mat->specular[2]);
-//         m->Kt = RGB(mat->transmittance[0],mat->transmittance[1], mat->transmittance[2]);
-
-//         this->BRDFs.push_back(m);
-//         this->numBRDFs++;
-//     }
-
-//     // Load shapes
-//     for (auto shp = shapes.begin(); shp != shapes.end() ; shp++) {
-
-//         // for each shape create a primitive (Mesh + material_ndx)
-
-//         auto *prim = new Primitive();
-//         Mesh *mesh = new Mesh();
-//         prim->g = mesh;
-
-//         // iterate shapes
-//         for (auto ver = shp->mesh.indices.begin(); ver != shp->mesh.indices.end();) {
-
-//             // Create a new face for the mesh
-//             Face *face = new Face();
-
-//             face->bb.min = Point(0,0,0);
-//             face->bb.max = Point(0,0,0);
-
-//             // Loop over vertices in the face.
-//             for (size_t v = 0; v < 3; v++) {
-
-//                 // access to vertex
-//                 tinyobj::real_t vx = attrib.vertices[3*ver->vertex_index];
-//                 tinyobj::real_t vy = attrib.vertices[3*ver->vertex_index+1];
-//                 tinyobj::real_t vz = attrib.vertices[3*ver->vertex_index+2];
-
-//                 Point ver_now = Point(vx,vy,vz);
-//                 int index = mesh->get_index(ver_now);
-//                 if(index != -1) face->vert_ndx[v] = index;
-//                 else {
-//                     mesh->vertices.push_back(ver_now);
-//                     mesh->numVertices++;
-//                     face->vert_ndx[v] = mesh->numVertices-1;
-//                 }
-//                 face->bb.update(ver_now);
-//                 mesh->bb.update(ver_now);
-
-//                 ver++;
-//             }
-
-//             mesh->faces.push_back(*face);
-//             mesh->numFaces++;
-//         }
-
-//         prim->material_ndx = shp->mesh.material_ids[0];
-//         prims.push_back(prim);
-//         numPrimitives++;
-//     }
-
-//     return true;
-// }
-
 
 bool Scene::trace (Ray r, Intersection *isect) {
     Intersection curr_isect;
     bool intersection = false;    
     
     if (numPrimitives==0) return false;
-    
+
     // iterate over all primitives
+
+
+
+    // isect->isLight = false; // download new intersection.hpp
+    // // now iterate over light sources and intersect with those that have geometry
+    // for (auto l = lights.begin() ; l != lights.end() ; l++) {
+    //     if ((*l)->type == AREA_LIGHT) {
+    //         AreaLight *al = (AreaLight *) *l;
+    //         if (al->gem->intersect(r, &curr_isect)) {
+    //             //printf("Intersect light\n");
+    //             if (!intersection) { // first intersection
+    //                 intersection = true;
+    //                 *isect = curr_isect;
+    //                 isect->isLight = true;
+    //                 isect->Le = al->L();
+    //             } else if (curr_isect.depth < isect->depth) {
+    //                 *isect = curr_isect;
+    //                 isect->isLight = true;
+    //                 isect->Le = al->L();
+    //             }
+    //         }
+    //     }
+    // }
+
     for (auto prim_itr = prims.begin() ; prim_itr != prims.end() ; prim_itr++) {
         if ((*prim_itr)->g->intersect(r, &curr_isect)) {
-            if (!intersection) { // first intersection
+            if (!intersection) {
                 intersection = true;
+                curr_isect.f = BRDFs[(*prim_itr)->material_ndx];
                 *isect = curr_isect;
-                isect->f = BRDFs[(*prim_itr)->material_ndx];
+                isect->isLight = false;
             }
             else if (curr_isect.depth < isect->depth) {
+                curr_isect.f = BRDFs[(*prim_itr)->material_ndx];
                 *isect = curr_isect;
-                isect->f = BRDFs[(*prim_itr)->material_ndx];
+                isect->isLight = false;
             }
         }
     }
+
+
+
     return intersection;
 }
 
@@ -287,9 +219,9 @@ bool Scene::trace (Ray r, Intersection *isect) {
 bool Scene::visibility (Ray s, const float maxL) {
     bool visible = true;
     Intersection curr_isect;
-    
+
     if (numPrimitives==0) return true;
-    
+
     // iterate over all primitives while visible
     for (auto prim_itr = prims.begin() ; prim_itr != prims.end() && visible ; prim_itr++) {
         if ((*prim_itr)->g->intersect(s, &curr_isect)) {

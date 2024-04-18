@@ -11,10 +11,51 @@
 #include "../utils/vector.hpp"
 #include "../Rays/ray.hpp"
 #include <algorithm>
-
+// do livro Ray Tracing Gems II
 typedef struct BB {
-public:
     Point min, max;
+    bool intersect (Ray r) {
+        Vector invRaydir = Vector(1/r.dir.X, 1/r.dir.Y, 1/r.dir.Z);
+        float tminx, tmaxx, tymin, tymax, tzmin, tzmax;
+        if (r.dir.X >= 0) {
+            tminx = (min.X - r.o.X);
+            tmaxx = (max.X - r.o.X);
+        }
+        else {
+            tminx = (max.X - r.o.X);
+            tmaxx = (min.X - r.o.X);
+        }
+
+        if (r.dir.Y >= 0) {
+            tymin = (min.Y - r.o.Y) ;
+            tymax = (max.Y - r.o.Y) ;
+        }
+        else {
+            tymin = (max.Y - r.o.Y);
+            tymax = (min.Y - r.o.Y);
+        }
+
+        if (r.dir.Z >= 0) {
+            tzmin = (min.Z - r.o.Z);
+            tzmax = (max.Z - r.o.Z);
+        }
+        else {
+            tzmin = (max.Z - r.o.Z);
+            tzmax = (min.Z - r.o.Z);
+        }
+
+        // min and max are minus origin
+        Vector tLower = Vector(tminx * invRaydir.X, tymin * invRaydir.Y, tzmin * invRaydir.Z);
+        Vector tUpper = Vector(tmaxx * invRaydir.X, tymax * invRaydir.Y, tzmax * invRaydir.Z);
+
+
+        float tBoxMin = tLower.MaxComponent();
+        float tBoxMax = tUpper.MinComponent();
+
+        return tBoxMin <= tBoxMax;
+    }
+
+
     void update (Point p) {
         if (p.X < min.X) min.X = p.X;
         else if (p.X > max.X) max.X = p.X;
@@ -23,39 +64,6 @@ public:
         if (p.Z < min.Z) min.Z = p.Z;
         else if (p.Z > max.Z) max.Z = p.Z;
     }
-    /*
-     * I suggest you implement:
-     *  bool intersect (Ray r) { }
-     *
-     * based on PBRT's 3rd ed. book , sec 3.1.2, pags 125..128 + 214,217,221
-     *
-     * or https://doi.org/10.1007/978-1-4842-7185-8_2
-     *
-     */
-    bool intersect (Ray r) { 
-        
-        float tmin = (min.X - r.o.X) / r.dir.X;
-        float tmax = (max.X - r.o.X) / r.dir.X;
-        if (tmin > tmax) std::swap(tmin, tmax);
-
-        float tymin = (min.Y - r.o.Y) / r.dir.Y;
-        float tymax = (max.Y - r.o.Y) / r.dir.Y;
-        if (tymin > tymax) std::swap(tymin, tymax);
-
-        if ((tmin > tymax) || (tymin > tmax)) return false;
-
-        if (tymin > tmin) tmin = tymin;
-        if (tymax < tmax) tmax = tymax;
-
-        float tzmin = (min.Z - r.o.Z) / r.dir.Z;
-        float tzmax = (max.Z - r.o.Z) / r.dir.Z;
-        if (tzmin > tzmax) std::swap(tzmin, tzmax);
-
-
-        if ((tmin > tzmax) || (tzmin > tmax)) return false;    
-        
-        
-        return true; }
 } BB;
 
 #endif /* AABB_hpp */

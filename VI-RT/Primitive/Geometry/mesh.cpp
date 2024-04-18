@@ -14,70 +14,101 @@
 // Moller Trumbore intersection algorithm
 
 bool Mesh::TriangleIntersect (Ray r, Face f, Intersection *isect) {
-    if (!f.bb.intersect(r)) return false;
 
-    // Get the three vertices of the triangle.
-    Point v0 = vertices[f.vert_ndx[0]];
-    Point v1 = vertices[f.vert_ndx[1]];
-    Point v2 = vertices[f.vert_ndx[2]];
 
-    // Compute triangle normal
-    Vector e1 = v0.vec2point(v1);
-    Vector e2 = v0.vec2point(v2);
-    Vector normal = e1.cross(e2);
+    bool intersected = f.bb.intersect(r);
+    if (!intersected) return false;
 
-    // Compute distance to plane
-    Vector dif = Vector(v0.X - r.o.X, v0.Y - r.o.Y, v0.Z - r.o.Z);
-    float d = normal.dot(dif) / normal.dot(r.dir);
-    if (d < 0.0f) {
-        // Triangle is behind the ray origin
+    const float EPSILON = 0.0000001;
+    Point vertex0 = this->vertices[f.vert_ndx[0]];
+    Point vertex1 = this->vertices[f.vert_ndx[1]];
+    Point vertex2 = this->vertices[f.vert_ndx[2]];
+
+    Vector edge1, edge2, h, s, q;
+    float a,i,u,v;
+
+    edge1 = vertex0.vec2point(vertex1);
+    edge2 = vertex0.vec2point(vertex2);
+
+    h = r.dir.cross(edge2);
+    a = edge1.dot(h);
+    if (a > -EPSILON && a < EPSILON)
+        return false;    // This ray is parallel to this triangle.
+    i = 1.0f/a;
+    Point ps = r.o - vertex0;
+    s = Vector(ps.X,ps.Y,ps.Z);
+    u = i * s.dot(h);
+    if (u < 0.0 || u > 1.0)
+        return false;
+    q = s.cross(edge1);
+    v = i * r.dir.dot(q);
+    if (v < 0.0 || u + v > 1.0)
+        return false;
+    // At this stage we can compute t to find out where the intersection point is on the line.
+    float t = i * edge2.dot(q);
+    if (t > EPSILON) // ray intersection
+    {
+        isect->p = r.o + (r.dir * t);
+
+
+
+        Vector normal = f.geoNormal;
+        Vector wo = -1.f * r.dir;
+        // make sure the normal points to the same side of the surface as wo
+        normal.Faceforward(wo);
+        isect->gn = normal;
+        isect->sn = normal;
+
+        isect->depth = t;
+        // preencher shading
+        isect->wo = Vector(-r.dir.X,-r.dir.Y,-r.dir.Z);
+        return true;
+    }
+    else {// This means that there is a line intersection but not a ray intersection.
         return false;
     }
-
-    // Compute intersection point
-    Point p = r.o + Point(d * r.dir.X, d * r.dir.Y, d * r.dir.Z);
-
-    // Check if intersection point is inside the triangle
-    Vector e0 = p.vec2point(v0);
-    float u = normal.dot(e0.cross(e1));
-    float v = normal.dot(e2.cross(e0));
-    if (u < 0.0f || v < 0.0f || u + v > 1.0f) {
-        // Intersection point is outside the triangle
-        return false;
-    }
-    
-    // Compute intersection information and store in isect
-    isect->p = p;
-    isect->gn = normal;
-    isect->sn = normal; // Shading normal is the same as the geometric normal for now
-    isect->wo = r.dir * -1.0f;
-    isect->depth = d;
-    // Set BRDF to NULL for now, this will be set later by the material
-    isect->f = NULL;
-    
-    return true;
 }
+
 
 bool Mesh::intersect (Ray r, Intersection *isect) {
     bool intersect = true, intersect_this_face;
     Intersection min_isect, curr_isect;
     float min_depth=MAXFLOAT;
-
     // intersect the ray with the mesh BB
     if (!bb.intersect(r)) return false;
-    
+
     // If it intersects then loop through the faces
     intersect = false;
+    int index = 0;
     for (auto face_it=faces.begin() ; face_it != faces.end() ; face_it++) {
         intersect_this_face = TriangleIntersect(r, *face_it, &curr_isect);
         if (!intersect_this_face) continue;
-        
+        min_isect.FaceID = index;
         intersect = true;
         if (curr_isect.depth < min_depth) {  // this is closer
             min_depth = curr_isect.depth;
             min_isect = curr_isect;
+            min_isect.FaceID = index;
         }
+        index ++;
     }
-    
+    *isect = min_isect;
     return intersect;
+}
+
+int Mesh::getIndexVertices(Point K){
+    int index =0;
+    for (auto it = vertices.begin(); it != vertices.end(); it++){
+        if (it->equals(K)) {
+            return index;
+        }
+        index++;
+    }
+    return -1;
+}
+
+void Mesh::addVertice(Point p){
+    this->bb.update(p);
+    vertices.push_back(p);
+    numVertices++;
 }

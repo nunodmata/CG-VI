@@ -26,9 +26,8 @@ public:
         Vector offset = EPSILON * normal;
         if (dir.dot(normal) < 0)
             offset = -1.f * offset;
-        o.X = o.X + offset.X;
-        o.Y = o.Y + offset.Y;
-        o.Z = o.Z + offset.Z;
+        o = o + offset;
+
     }
 };
 

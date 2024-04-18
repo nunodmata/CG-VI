@@ -9,28 +9,17 @@
 #define Scene_hpp
 
 #include <iostream>
-
-#include "../Primitive/primitive.hpp"
-#include "../Light/light.hpp"
-#include "../Rays/ray.hpp"
-#include "../Rays/intersection.hpp"
-#include "../Primitive/Geometry/triangle.hpp"
-#include "../Primitive/BRDF/BRDF.hpp"
-
-typedef struct rehash { //PODE TER ERRO
-    int objNdx;   // Index of the vertex in the original mesh
-    int ourNdx;   // Index of the vertex in our representation
-    // Constructor to initialize objNdx and ourNdx
-    rehash(int objIndex, int ourIndex) : objNdx(objIndex), ourNdx(ourIndex) {}
-    // Comparison operator for set operations
-    bool operator<(const rehash& other) const {
-        return objNdx < other.objNdx;
-    }
-}rehash;
-
+#include <string>
+#include <vector>
+#include "primitive.hpp"
+#include "light.hpp"
+#include "ray.hpp"
+#include "intersection.hpp"
+#include "BRDF.hpp"
+#include "Phong.hpp"
 
 class Scene {
-    std::vector <Primitive *> prims;
+    std::vector <Primitive *>  prims;
     std::vector <BRDF *> BRDFs;
 public:
     std::vector <Light *> lights;
@@ -45,6 +34,27 @@ public:
         std::cout << "#primitives = " << numPrimitives << " ; ";
         std::cout << "#lights = " << numLights << " ; ";
         std::cout << "#materials = " << numBRDFs << " ;" << std::endl;
+
+        // print materials
+        for (int i=0; i<numBRDFs; i++) {
+            std::cout << "Material " << i << " : ";
+            //convert to Phong and print values
+            auto phong = (Phong*) BRDFs[i];
+            if (phong) {
+                std::cout << "Phong : \n";
+                //print Ka RGB
+                std::cout << "Ka = " << phong->Ka.R << " " << phong->Ka.G << " " << phong->Ka.B << " ; \n";
+                //print Kd RGB
+                std::cout << "Kd = " << phong->Kd.R << " " << phong->Kd.G << " " << phong->Kd.B << " ; \n";
+                //print Ks RGB
+                std::cout << "Ks = " << phong->Ks.R << " " << phong->Ks.G << " " << phong->Ks.B << " ; \n";
+            }
+            else {
+                std::cout << "Unknown material type" << std::endl;
+            }
+
+        }
+
     }
 };
 

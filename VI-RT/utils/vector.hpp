@@ -63,6 +63,14 @@ public:
     int MaxDimension(void) {
         return (X > Y) ? ((X > Z) ? 0 : 2) : ((Y > Z) ? 1 : 2);
     }
+
+        float MaxComponent(void) {
+        return (X > Y) ? ((X > Z) ? X : Z) : ((Y > Z) ? Y : Z);
+    }
+    float MinComponent(void) {
+        return (X < Y) ? ((X < Z) ? X : Z) : ((Y < Z) ? Y : Z);
+    }
+    
     // from pbrt book (3rd ed.), sec 2.2.1, pag 67
     Vector Permute(int x, int y, int z) {
         const float XYZ[3]={X,Y,Z};
@@ -126,6 +134,14 @@ public:
     Point Permute(int x, int y, int z) {
         const float XYZ[3]={X,Y,Z};
         return Point(XYZ[x], XYZ[y], XYZ[z]);
+    }
+
+        bool equals(Point other){
+        return this->X == other.X && this->Y == other.Y && this->Z == other.Z;
+    }
+
+    bool isZero(){
+        return this->X == 0 && this->Y == 0 && this->Z == 0;
     }
 };
 

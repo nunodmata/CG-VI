@@ -41,10 +41,13 @@ int main(int argc, const char * argv[]) {
     std::cout << std::endl;
     
     // add an ambient light to the scene
-    AmbientLight ambient(RGB(0.9,0.9,0.9));
+    AmbientLight ambient(RGB(0.05,0.05,0.05));
     scene.lights.push_back(&ambient);
     scene.numLights++;
-    
+    // add a point light to the scene
+    PointLight *pl1 = new PointLight(RGB(0.65,0.65,0.65), Point(288,508,282));
+    scene.lights.push_back(pl1);
+    scene.numLights++;
     // Image resolution
     const int W= 1024;
     const int H= 1024;

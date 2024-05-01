@@ -18,6 +18,7 @@
 #include <set>
 #include <vector>
 
+
 using namespace std;
 using namespace tinyobj;
 
@@ -158,8 +159,6 @@ bool Scene::Load (const std::string &fname) {
         this->prims.push_back(p);
         this->numPrimitives++;
     }
-
-
     return true;
 }
 

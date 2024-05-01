@@ -29,9 +29,13 @@ int main(int argc, const char * argv[]) {
     bool success;
     clock_t start, end;
     double cpu_time_used;
-    
-    success = scene.Load("/home/nuno/VI/CG-VI/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
-    
+
+    //Nuno
+    //success = scene.Load("/home/nuno/VI/CG-VI/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
+    //Filipa
+    success = scene.Load("/Users/filipa/Desktop/CG-VI/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
+
+
     if (!success) {
         std::cout << "ERROR!! :o\n";
         return 1;
@@ -41,10 +45,13 @@ int main(int argc, const char * argv[]) {
     std::cout << std::endl;
     
     // add an ambient light to the scene
-    AmbientLight ambient(RGB(0.9,0.9,0.9));
+    AmbientLight ambient(RGB(0.05,0.05,0.05));
     scene.lights.push_back(&ambient);
     scene.numLights++;
-    
+    // add a point light to the scene
+    PointLight *pl1 = new PointLight(RGB(0.65,0.65,0.65), Point(288,508,282));
+    scene.lights.push_back(pl1);
+    scene.numLights++;
     // Image resolution
     const int W= 1024;
     const int H= 1024;

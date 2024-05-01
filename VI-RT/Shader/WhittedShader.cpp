@@ -19,6 +19,9 @@ RGB WhittedShader::directLighting (Intersection isect, Phong *f) {
         if ((*l)->type == AMBIENT_LIGHT) {  // is it an ambient light ?
             if (!f->Ka.isZero()) {
                 RGB Ka = f->Ka;
+                if(f->texHeigth) {
+                    Ka = f->sampleTexture(isect.uv[0], isect.uv[1]);
+                } 
                 color += Ka * (*l)->L();
             }
             continue;
@@ -68,7 +71,6 @@ RGB WhittedShader::specularReflection (Intersection isect, Phong *f, int depth) 
     bool intersected = scene->trace(specular, &s_isect);
     // shade this intersection
     RGB color = shade (intersected, s_isect, 0);
-    return color;
     return color;
 }
 

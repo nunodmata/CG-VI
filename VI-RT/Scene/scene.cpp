@@ -13,6 +13,7 @@
 #include "../Primitive/primitive.hpp"
 #include "../Primitive/Geometry/mesh.hpp"
 #include "../Primitive/BRDF/Phong.hpp"
+#include "AreaLight.hpp"
 
 #include <iostream>
 #include <set>
@@ -162,6 +163,59 @@ bool Scene::Load (const std::string &fname) {
     return true;
 }
 
+// bool Scene::trace (Ray r, Intersection *isect) {
+//     Intersection curr_isect;
+//     bool intersection = false;    
+    
+//     if (numPrimitives==0) return false;
+
+//     // iterate over all primitives
+
+//     // isect->isLight = false; // download new intersection.hpp
+//     // // now iterate over light sources and intersect with those that have geometry
+//     // for (auto l = lights.begin() ; l != lights.end() ; l++) {
+//     //     if ((*l)->type == AREA_LIGHT) {
+//     //         AreaLight *al = (AreaLight *) *l;
+//     //         if (al->gem->intersect(r, &curr_isect)) {
+//     //             //printf("Intersect light\n");
+//     //             if (!intersection) { // first intersection
+//     //                 intersection = true;
+//     //                 *isect = curr_isect;
+//     //                 isect->isLight = true;
+//     //                 isect->Le = al->L();
+//     //             } else if (curr_isect.depth < isect->depth) {
+//     //                 *isect = curr_isect;
+//     //                 isect->isLight = true;
+//     //                 isect->Le = al->L();
+//     //             }
+//     //         }
+//     //     }
+//     // }
+
+//     for (auto prim_itr = prims.begin() ; prim_itr != prims.end() ; prim_itr++) {
+//         if ((*prim_itr)->g->intersect(r, &curr_isect)) {
+//             if (!intersection) {
+//                 intersection = true;
+//                 curr_isect.f = BRDFs[(*prim_itr)->material_ndx];
+//                 *isect = curr_isect;
+//                 isect->isLight = false;
+//             }
+//             else if (curr_isect.depth < isect->depth) {
+//                 curr_isect.f = BRDFs[(*prim_itr)->material_ndx];
+//                 *isect = curr_isect;
+//                 isect->isLight = false;
+//             }
+//         }
+//     }
+
+
+
+//     return intersection;
+// }
+
+
+
+
 bool Scene::trace (Ray r, Intersection *isect) {
     Intersection curr_isect;
     bool intersection = false;    
@@ -172,26 +226,26 @@ bool Scene::trace (Ray r, Intersection *isect) {
 
 
 
-    // isect->isLight = false; // download new intersection.hpp
-    // // now iterate over light sources and intersect with those that have geometry
-    // for (auto l = lights.begin() ; l != lights.end() ; l++) {
-    //     if ((*l)->type == AREA_LIGHT) {
-    //         AreaLight *al = (AreaLight *) *l;
-    //         if (al->gem->intersect(r, &curr_isect)) {
-    //             //printf("Intersect light\n");
-    //             if (!intersection) { // first intersection
-    //                 intersection = true;
-    //                 *isect = curr_isect;
-    //                 isect->isLight = true;
-    //                 isect->Le = al->L();
-    //             } else if (curr_isect.depth < isect->depth) {
-    //                 *isect = curr_isect;
-    //                 isect->isLight = true;
-    //                 isect->Le = al->L();
-    //             }
-    //         }
-    //     }
-    // }
+    isect->isLight = false; // download new intersection.hpp
+    // now iterate over light sources and intersect with those that have geometry
+    for (auto l = lights.begin() ; l != lights.end() ; l++) {
+        if ((*l)->type == AREA_LIGHT) {
+            AreaLight *al = (AreaLight *) *l;
+            if (al->gem->intersect(r, &curr_isect)) {
+                //printf("Intersect light\n");
+                if (!intersection) { // first intersection
+                    intersection = true;
+                    *isect = curr_isect;
+                    isect->isLight = true;
+                    isect->Le = al->L();
+                } else if (curr_isect.depth < isect->depth) {
+                    *isect = curr_isect;
+                    isect->isLight = true;
+                    isect->Le = al->L();
+                }
+            }
+        }
+    }
 
     for (auto prim_itr = prims.begin() ; prim_itr != prims.end() ; prim_itr++) {
         if ((*prim_itr)->g->intersect(r, &curr_isect)) {
@@ -213,6 +267,11 @@ bool Scene::trace (Ray r, Intersection *isect) {
 
     return intersection;
 }
+
+
+
+
+
 
 // checks whether a point on a light source (distance maxL) is visible
 bool Scene::visibility (Ray s, const float maxL) {

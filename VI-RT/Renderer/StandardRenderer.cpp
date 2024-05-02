@@ -11,6 +11,8 @@ void StandardRenderer::Render () {
     int W=0, H=0;  // resolution
     int x,y;
 
+    const bool jitter = true;
+
     // get resolution from the camera
     this->cam->getResolution(&W, &H);
     
@@ -25,10 +27,14 @@ void StandardRenderer::Render () {
             
             for (int ss = 0; ss < spp; ss++)
             {
-                
-                float jitterV[2] = {(float)rand() / RAND_MAX, (float)rand() / RAND_MAX};
-                // Generate Ray (camera)
-                this->cam->GenerateRay(x, y, &primary, jitterV);
+                if(jitter){
+                    float jitterV[2] = {(float)rand() / RAND_MAX, (float)rand() / RAND_MAX};
+                    // Generate Ray (camera)
+                    this->cam->GenerateRay(x, y, &primary, jitterV);
+                }
+                else{
+                    this->cam->GenerateRay(x, y, &primary);
+                }
                 
                 // trace ray (scene)
                 intersected = scene->trace(primary, &isect);

@@ -47,8 +47,15 @@ int main(int argc, const char * argv[]) {
     scene.lights.push_back(&ambient);
     scene.numLights++;
     // add a point light to the scene
-    PointLight *pl1 = new PointLight(RGB(0.65,0.65,0.65), Point(288,508,282));
+    /*PointLight *pl1 = new PointLight(RGB(0.65,0.65,0.65), Point(288,508,282));
     scene.lights.push_back(pl1);
+    scene.numLights++;*/
+    // add a area light to the scene
+    AreaLight *al1 = new AreaLight(RGB(0.65,0.65,0.65), Point(288,548,282), Point(288,548,200), Point(203,548,282), Vector(0,-1,0));
+    scene.lights.push_back(al1);
+    scene.numLights++;
+    AreaLight *al2 = new AreaLight(RGB(0.65,0.65,0.65), Point(203,548,200), Point(288,548,200), Point(203,548,282), Vector(0,-1,0));
+    scene.lights.push_back(al2);
     scene.numLights++;
 
 
@@ -72,7 +79,9 @@ int main(int argc, const char * argv[]) {
 
     //shd = new AmbientShader(&scene, background);
 
-    shd = new WhittedShader(&scene, background);
+    //shd = new WhittedShader(&scene, background);
+
+    shd = new DistributedShader(&scene, background);
 
 
     // declare the renderer

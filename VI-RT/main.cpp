@@ -43,18 +43,18 @@ int main(int argc, const char * argv[]) {
     std::cout << std::endl;
     
     // add an ambient light to the scene
-    AmbientLight ambient(RGB(0.25,0.25,0.25));
+    /*AmbientLight ambient(RGB(0.25,0.25,0.25));
     scene.lights.push_back(&ambient);
-    scene.numLights++;
+    scene.numLights++;*/
     // add a point light to the scene
     /*PointLight *pl1 = new PointLight(RGB(0.65,0.65,0.65), Point(288,508,282));
     scene.lights.push_back(pl1);
     scene.numLights++;*/
     // add a area light to the scene
-    AreaLight *al1 = new AreaLight(RGB(0.65,0.65,0.65), Point(288,548,282), Point(288,548,200), Point(203,548,282), Vector(0,-1,0));
+    AreaLight *al1 = new AreaLight(RGB(1,1,1), Point(347.5, 548, 349.2), Point(208.5, 548, 349.2), Point(208.5, 548, 209.2), Vector(0,-1,0));
     scene.lights.push_back(al1);
     scene.numLights++;
-    AreaLight *al2 = new AreaLight(RGB(0.65,0.65,0.65), Point(203,548,200), Point(288,548,200), Point(203,548,282), Vector(0,-1,0));
+    AreaLight *al2 = new AreaLight(RGB(1,1,1), Point(347.5, 548, 349.2), Point(208.5, 548, 209.2), Point(347.5, 548, 209.2), Vector(0,-1,0));
     scene.lights.push_back(al2);
     scene.numLights++;
 
@@ -81,11 +81,13 @@ int main(int argc, const char * argv[]) {
 
     //shd = new WhittedShader(&scene, background);
 
-    shd = new DistributedShader(&scene, background);
+    //shd = new DistributedShader(&scene, background);
+
+    shd = new PathTracerShader(&scene, background);
 
 
     // declare the renderer
-    int spp=16;     // samples per pixel
+    int spp=32;     // samples per pixel
     StandardRenderer myRender (cam, &scene, img, shd, spp);
     // render
     start = clock();

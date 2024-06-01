@@ -93,8 +93,15 @@ int main(int argc, const char * argv[]) {
     end = clock();
     cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 
+// Convert the image to PFM format
+    std::string pfmFilename = "MyImage.pfm";
+    if (!img->ToPFM(pfmFilename)) {
+        std::cerr << "Error converting image to PFM format." << std::endl;
+        return 1;
+    }
+    std::cout << "Image converted to PFM format: " << pfmFilename << std::endl;
     // save the image
-    img->Save("MyImage.ppm");
+    img->Save("MyImage.pfm");
 
     // Print the directory of the saved image
     std::cout << "Image saved to: " << std::filesystem::current_path() << std::endl;

@@ -65,3 +65,39 @@ bool ImagePPM::Save (std::string filename) {
     }
 
 }
+
+//Save image as PFM
+bool ImagePPM::ToPFM(std::string filename){
+ std::ofstream ofs;
+    try {
+        ofs.open(filename, std::ios::binary);
+        if (ofs.fail()) throw("Can't open output file");
+
+        // Write the header information to file 
+        //PF=> Format , -1.0 =>scale factor
+        ofs << "PF\n" << this->W << " " << this->H << "\n-1.0\n";
+
+        // Write the pixel data
+        for (int j = 0; j < this->H; ++j) {
+            for (int i = 0; i < this->W; ++i) {
+                // Convert RGB values to floats and write them to the file
+               // Pixel values are normalized to the range [0, 1]
+                float r = static_cast<float>(imagePlane[j * W + i].R) / 255.0f;
+                float g = static_cast<float>(imagePlane[j * W + i].G) / 255.0f;
+                float b = static_cast<float>(imagePlane[j * W + i].B) / 255.0f;
+
+                ofs.write(reinterpret_cast<char*>(&r), sizeof(float));
+                ofs.write(reinterpret_cast<char*>(&g), sizeof(float));
+                ofs.write(reinterpret_cast<char*>(&b), sizeof(float));
+            }
+        }
+
+        ofs.close();
+        return true;
+    }
+    catch (const char *err) {
+        std::cerr << err << std::endl;
+        ofs.close();
+        return false;
+    }
+}

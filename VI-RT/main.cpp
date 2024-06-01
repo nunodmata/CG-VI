@@ -10,6 +10,7 @@
 #include "Camera/perspective.hpp"
 #include "Renderer/StandardRenderer.hpp"
 #include "Image/ImagePPM.hpp"
+#include "Image/ImageJPG.hpp"
 #include "Shader/AmbientShader.hpp"
 #include "Shader/WhittedShader.hpp"
 #include "Shader/DistributedShader.hpp"
@@ -22,9 +23,20 @@
 #include <time.h>
 
 int main(int argc, const char * argv[]) {
+    if(argc != 3){
+        std::cout << "Usage: ./" << argv[0] << " <format> <output_file>" << std::endl;
+        std::cout << "Format: PPM(ppm), PFM(pfm), JPG(jpg), OPENEXR(openexr)" << std::endl;
+        std::cout << "Output file should have extension according to the selected format" << std::endl;
+        return 1;
+    }
+    else{
+        std::cout << "Selected Format: " << argv[1] << std::endl;
+        std::cout << "Selected Output File: " << argv[2] << std::endl;
+    }
+
     Scene scene;
     Perspective *cam; // Camera
-    ImagePPM *img;    // Image
+    Image *img;    // Image
     Shader *shd;
     bool success;
     clock_t start, end;
@@ -64,7 +76,7 @@ int main(int argc, const char * argv[]) {
     const int W= 1024;
     const int H= 1024;
     
-    img = new ImagePPM(W,H);
+    img = new Image(W,H);
     
     // Camera parameters
     const Point Eye ={280,275,-330}, At={280,265,0};
@@ -96,14 +108,47 @@ int main(int argc, const char * argv[]) {
     cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 
 // Convert the image to PFM format
-    std::string pfmFilename = "MyImage.pfm";
-    if (!img->ToPFM(pfmFilename)) {
-        std::cerr << "Error converting image to PFM format." << std::endl;
+    std::string format(argv[1]);
+    std::string FileName(argv[2]);
+
+    if(format == "PPM" || format == "ppm") { //PPM
+    
+        ImagePPM imgPPM = ImagePPM(*img);
+        // save the image
+        if(!imgPPM.Save(FileName)){
+            std::cerr << "Error converting image to PPM format." << std::endl;
+            return 1;
+        }
+        std::cout << "Image converted to PPM format: " << FileName << std::endl;
+            
+        
+    }
+    else if(format == "PFM" || format == "pfm") { //PFM
+        ImagePPM imgPFM = ImagePPM(*img);
+        // save the image
+        if(!imgPFM.ToPFM(FileName)){
+            std::cerr << "Error converting image to PFM format." << std::endl;
+            return 1;
+        }
+        imgPFM.Save(FileName);
+        std::cout << "Image converted to PFM format: " << FileName << std::endl;
+    }
+    else if(format == "JPG" || format == "jpg"){ //JPG
+        ImageJPG imgJPG = ImageJPG(*img);
+        // save the image
+        if(!imgJPG.Save(FileName)){
+            std::cerr << "Error converting image to JPG format." << std::endl;
+            return 1;
+        }
+        std::cout << "Image converted to JPG format: " << FileName << std::endl;
+    }
+    else if(format == "OPENEXR" || format == "openexr"){ //OPENEXR
+        std::cerr << "OPENEXR format under maintenance." << std::endl;
         return 1;
     }
-    std::cout << "Image converted to PFM format: " << pfmFilename << std::endl;
-    // save the image
-    img->Save("MyImage.pfm");
+    else{
+        std::cout << "Invalid format" << std::endl;
+    }
 
     // Print the directory of the saved image
     std::cout << "Image saved to: " << std::filesystem::current_path() << std::endl;

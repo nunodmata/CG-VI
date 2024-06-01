@@ -5,21 +5,21 @@
 //  Created by Luis Paulo Santos on 09/03/2023.
 //
 
-#ifndef ImagePPM_hpp
-#define ImagePPM_hpp
+#ifndef ImageJPG_hpp
+#define ImageJPG_hpp
 #include "image.hpp"
+#include <opencv2/opencv.hpp>
 
-class ImagePPM: public Image {
+class ImageJPG: public Image {
     typedef struct {
         unsigned char val[3];  // r,g,b
-    } PPM_pixel;
-    PPM_pixel *imageToSave;
+    } JPG_pixel;
+    JPG_pixel *imageToSave;
     void ToneMap ();
 public:
-    ImagePPM(const int W, const int H):Image(W, H) {}
-    ImagePPM(Image &img);
+    ImageJPG(const int W, const int H):Image(W, H) {}
+    ImageJPG(Image &img);
     bool Save (std::string filename);
-    bool ToPFM(std::string filename);
 };
 
 #endif /* ImagePPM_hpp */

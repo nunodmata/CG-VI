@@ -1,7 +1,7 @@
 CXX      := g++
-CXXFLAGS := -std=c++17 -O3
+CXXFLAGS := -std=c++17 -O3 `pkg-config --cflags opencv4`
 #CXXFLAGS := -std=c++11 -O3
-LDFLAGS  := 
+LDFLAGS  := `pkg-config --libs opencv4`
 BUILD    := ./build
 OBJ_DIR  := $(BUILD)/objects
 APP_DIR  := $(BUILD)/apps

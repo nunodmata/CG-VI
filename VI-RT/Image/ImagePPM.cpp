@@ -28,6 +28,14 @@ void ImagePPM::ToneMap() {
         }
     }
 }
+
+ImagePPM::ImagePPM(Image &img){
+    W = img.getW();
+    H = img.getH();
+    imagePlane = new RGB[W*H];
+    imagePlane = img.getImagePlane();
+}
+
 bool ImagePPM::Save (std::string filename) {
     
     // convert from float to {0,1,..., 255}

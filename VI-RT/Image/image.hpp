@@ -25,6 +25,15 @@ public:
     ~Image() {
         if (imagePlane!=NULL) delete[] imagePlane;
     }
+    int getW(){
+        return W;
+    }
+    int getH(){
+        return H;
+    }
+    RGB *getImagePlane(){
+        return imagePlane;
+    }
     bool set (int x, int y, const RGB &rgb) {
         if (x>W or y>H) return false;
         imagePlane[y*W+x] = rgb;
@@ -38,7 +47,7 @@ public:
     virtual bool Save (std::string filename) {return true;}
     RGB getPixel(int x, int y) const {
         return imagePlane[y * W + x];
-}
+    }
 };
 
 #endif /* image_hpp */

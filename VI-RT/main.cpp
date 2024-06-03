@@ -11,6 +11,7 @@
 #include "Renderer/StandardRenderer.hpp"
 #include "Image/ImagePPM.hpp"
 #include "Image/ImageJPG.hpp"
+#include "Image/ImageEXR.hpp"
 #include "Shader/AmbientShader.hpp"
 #include "Shader/WhittedShader.hpp"
 #include "Shader/DistributedShader.hpp"
@@ -142,8 +143,15 @@ int main(int argc, const char * argv[]) {
         }
         std::cout << "Image converted to JPG format: " << FileName << std::endl;
     }
-    else if(format == "OPENEXR" || format == "openexr"){ //OPENEXR
-        std::cerr << "OPENEXR format under maintenance." << std::endl;
+    else if(format == "OPENEXR" || format == "openexr"){
+        ImageEXR imgEXR = ImageEXR(*img);
+        
+        if(!imgEXR.Save(FileName)){
+            std::cerr << "Error converting image to OPENEXR format." << std::endl;
+            return 1;
+        }
+         //OPENEXR
+        std::cerr << "Image saved in OPENEXR format: " << FileName << std::endl;
         return 1;
     }
     else{

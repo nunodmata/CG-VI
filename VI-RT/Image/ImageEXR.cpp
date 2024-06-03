@@ -68,7 +68,7 @@ bool ImageEXR::Save(std::string filename) {
 
     std::vector<int> exr_params;
     exr_params.push_back(cv::IMWRITE_EXR_TYPE);
-    exr_params.push_back(cv::IMWRITE_EXR_TYPE_HALF); // OpenCV supports HALF and FLOAT
+    exr_params.push_back(cv::IMWRITE_EXR_TYPE_HALF); // OpenCV supports HALF and FLOAT, here its set as half (unlink the previous Save function to use FLOAT)
 
     cv::imwrite(filename, hdr_image, exr_params);
     return true;

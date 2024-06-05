@@ -1,16 +1,9 @@
-//
-//  ImagePPM.cpp
-//  VI-RT
-//
-//  Created by Luis Paulo Santos on 09/03/2023.
-//
-
-#include "ImagePPM.hpp"
 #include <iostream>
 #include <fstream>
+#include "ImagePFM.hpp"
 
-void ImagePPM::ToneMap() {
-    imageToSave = new PPM_pixel[W*H];
+void ImagePFM::ToneMap() {
+    imageToSave = new PFM_pixel[W*H];
 
     // loop over each pixel in the image, calculate luminance, and tone map
     for (int j = 0; j < H; j++) {
@@ -29,16 +22,16 @@ void ImagePPM::ToneMap() {
     }
 }
 
-ImagePPM::ImagePPM(Image &img){
+ImagePFM::ImagePFM(Image &img) {
     W = img.getW();
     H = img.getH();
-    imagePlane = new RGB[W*H];
+    imagePlane = new RGB[W * H];
     imagePlane = img.getImagePlane();
 }
 
-bool ImagePPM::Save (std::string filename) {
-    
-    // convert from float to {0,1,..., 255}
+bool ImagePFM::Save(std::string filename) {
+    // Converta os dados da imagem para o formato PFM e salve-os no arquivo especificado
+// convert from float to {0,1,..., 255}
     ToneMap();
     printf("ToneMap\n");
 
@@ -53,25 +46,31 @@ bool ImagePPM::Save (std::string filename) {
         ofs.open(filename, std::ios::binary);
         if (ofs.fail()) throw("Can't open output file");
 
-        ofs << "P6\n" << this->W << " " << this->H << "\n255\n";
-        unsigned char r, g, b;
+        // Escreva as informações do cabeçalho no arquivo
+        ofs << "PF\n" << W << " " << H << "\n-1.0\n";
 
-        // loop over each pixel in the image, clamp and convert to byte format
-        for (int i = 0; i < this->W * this->H; ++i) {
-            r = imageToSave[i].val[0];
-            g = imageToSave[i].val[1];
-            b = imageToSave[i].val[2];
-            ofs << r << g << b;
+        // Escreva os dados dos pixels no arquivo
+        for (int j = 0; j < H; ++j) {
+            for (int i = 0; i < W; ++i) {
+                // Converta os valores RGB para floats e escreva-os no arquivo
+                // Os valores dos pixels são normalizados para o intervalo [0, 1]
+                float r = static_cast<float>(imagePlane[j * W + i].R) / 255.0f;
+                float g = static_cast<float>(imagePlane[j * W + i].G) / 255.0f;
+                float b = static_cast<float>(imagePlane[j * W + i].B) / 255.0f;
+
+                ofs.write(reinterpret_cast<char*>(&r), sizeof(float));
+                ofs.write(reinterpret_cast<char*>(&g), sizeof(float));
+                ofs.write(reinterpret_cast<char*>(&b), sizeof(float));
+            }
         }
+
         ofs.close();
         return true;
     }
-    catch (const char *err) {
-        fprintf(stderr, "%s\n", err);
+    catch (const char* err) {
+        std::cerr << err << std::endl;
         ofs.close();
         return false;
     }
-
 }
-
 

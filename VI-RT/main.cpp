@@ -12,6 +12,7 @@
 #include "Image/ImagePPM.hpp"
 #include "Image/ImageJPG.hpp"
 #include "Image/ImageEXR.hpp"
+#include "Image/ImagePFM.hpp"
 #include "Shader/AmbientShader.hpp"
 #include "Shader/WhittedShader.hpp"
 #include "Shader/DistributedShader.hpp"
@@ -125,13 +126,13 @@ int main(int argc, const char * argv[]) {
         
     }
     else if(format == "PFM" || format == "pfm") { //PFM
-        ImagePPM imgPFM = ImagePPM(*img);
+        ImagePFM imgPFM = ImagePFM(*img);
         // save the image
-        if(!imgPFM.ToPFM(FileName)){
+        if(!imgPFM.Save(FileName)){
             std::cerr << "Error converting image to PFM format." << std::endl;
             return 1;
         }
-        imgPFM.Save(FileName);
+        
         std::cout << "Image converted to PFM format: " << FileName << std::endl;
     }
     else if(format == "JPG" || format == "jpg"){ //JPG

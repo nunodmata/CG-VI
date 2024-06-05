@@ -19,7 +19,6 @@ public:
     ImagePPM(const int W, const int H):Image(W, H) {}
     ImagePPM(Image &img);
     bool Save (std::string filename);
-    bool ToPFM(std::string filename);
 };
 
 #endif /* ImagePPM_hpp */

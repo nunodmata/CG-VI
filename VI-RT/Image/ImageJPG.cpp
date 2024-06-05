@@ -49,7 +49,7 @@ bool ImageJPG::Save (std::string filename) {
     }
 
     try {
-        cv::Mat imageJPG(H, W, CV_8UC3, cv::Scalar(0,0,0));
+        cv::Mat imageJPG(H, W, CV_8UC3, cv::Scalar(0,0,0)); //CV_8UC3 -> 8-bit unsigned, 3 channels
         for (int j = 0; j < H; j++) {
             for (int i = 0; i < W; ++i) {
                 imageJPG.at<cv::Vec3b>(j, i)[0] = imageToSave[j*W+i].val[2];

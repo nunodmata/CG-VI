@@ -8,6 +8,7 @@
 #include <iostream>
 #include "Scene/scene.hpp"
 #include "Camera/perspective.hpp"
+#include "Camera/fish_eye.hpp"
 #include "Renderer/StandardRenderer.hpp"
 #include "Image/ImagePPM.hpp"
 #include "Image/ImageJPG.hpp"
@@ -25,19 +26,20 @@
 #include <time.h>
 
 int main(int argc, const char * argv[]) {
-    if(argc != 3){
-        std::cout << "Usage: ./" << argv[0] << " <format> <output_file>" << std::endl;
+    if(argc != 4){
+        std::cout << "Usage: " << argv[0] << " <Camera_Type> <format> <output_file>" << std::endl;
+        std::cout << "Camera_Type: FISH_EYE(fish_eye) placeholder placeholder" << std::endl;
         std::cout << "Format: PPM(ppm), PFM(pfm), JPG(jpg), OPENEXR(openexr)" << std::endl;
         std::cout << "Output file should have extension according to the selected format" << std::endl;
         return 1;
     }
     else{
-        std::cout << "Selected Format: " << argv[1] << std::endl;
-        std::cout << "Selected Output File: " << argv[2] << std::endl;
+        std::cout << "Selected Camera Type: " << argv[1] << std::endl;
+        std::cout << "Selected Format: " << argv[2] << std::endl;
+        std::cout << "Selected Output File: " << argv[3] << std::endl;
     }
 
     Scene scene;
-    Perspective *cam; // Camera
     Image *img;    // Image
     Shader *shd;
     bool success;
@@ -86,7 +88,16 @@ int main(int argc, const char * argv[]) {
     const float fovW = 90.f;
     const float fovH = fovW * (float)H/(float)W;  // in degrees
     const float fovWrad = fovW*3.14f/180.f, fovHrad = fovH*3.14f/180.f;    // to radians
-    cam = new Perspective(Eye, At, Up, W, H, fovWrad, fovHrad);
+
+    Camera *cam;
+    std::string CameraType(argv[1]);
+    if(CameraType == "FISH_EYE" || CameraType == "fish_eye"){
+        cam = new Fish_Eye(Eye, At, Up, W, H, fovWrad, fovHrad);
+    }
+    else{
+        cam = new Perspective(Eye, At, Up, W, H, fovWrad, fovHrad);
+    }
+    
     
     // create the shader
     RGB background(0.05, 0.05, 0.55);
@@ -110,8 +121,8 @@ int main(int argc, const char * argv[]) {
     cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 
 // Convert the image to PFM format
-    std::string format(argv[1]);
-    std::string FileName(argv[2]);
+    std::string format(argv[2]);
+    std::string FileName(argv[3]);
 
     if(format == "PPM" || format == "ppm") { //PPM
     

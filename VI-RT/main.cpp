@@ -97,13 +97,14 @@ int main(int argc, const char * argv[]) {
     }
     else if (CameraType == "MULTIPLE_CAMS" || CameraType == "multiple_cams") {
         MultipleCams* multiCam = new MultipleCams();
+        // we can also add the fish eye effect to one of the cameras in the multiple camera setup like the commented lines below!!!
         //multiCam->addCamera(new Fish_Eye(Eye, At, Up, W / 2, H / 2, fovWrad, fovHrad)); //1st image top left
         multiCam->addCamera(new Perspective(Eye, At, Up, W / 2, H / 2, fovWrad, fovHrad)); //1st image top left
-        multiCam->addCamera(new Perspective(Point(2,545,2), Point(560,200,300), Up, W, H / 2, fovWrad, fovHrad)); //2nd image top right
-
+        multiCam->addCamera(new Perspective(Point(0,400,0), Point(35,450,80), Up, W, H / 2, fovWrad, fovHrad)); //2nd image top right
+       
         //multiCam->addCamera(new Fish_Eye(Point(200,205,-330), At, Up, W / 2, H / 2, fovWrad, fovHrad)); //3rd image bottom left
-        multiCam->addCamera(new Perspective(Point(0,425,550), Point(480,-70,0), Up, W / 2, H / 2, fovWrad, fovHrad)); //3rd image bottom left
-        multiCam->addCamera(new Perspective(Point(213,425,200), Point(295,50,20), Up, W / 2, H / 2, fovWrad, fovHrad)); //4th image bottom right
+        multiCam->addCamera(new Perspective(Point(250,475,550), Point(420,-70,0), Up, W / 2, H / 2, fovWrad, fovHrad)); //3rd image bottom left
+        multiCam->addCamera(new Perspective(Point(213,425,200), Point(250,30,20), Up, W / 2, H / 2, fovWrad, fovHrad)); //4th image bottom right
         cam = multiCam;
         
     } else {
@@ -124,7 +125,7 @@ int main(int argc, const char * argv[]) {
 
 
     // declare the renderer
-    int spp=8;     // samples per pixel
+    int spp=32;     // samples per pixel
     StandardRenderer myRender (cam, &scene, img, shd, spp);
     // render
     start = clock();

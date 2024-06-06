@@ -30,8 +30,7 @@ ImagePFM::ImagePFM(Image &img) {
 }
 
 bool ImagePFM::Save(std::string filename) {
-    // Converta os dados da imagem para o formato PFM e salve-os no arquivo especificado
-// convert from float to {0,1,..., 255}
+   // Apply tone mapping to convert image data to PFM format
     ToneMap();
     printf("ToneMap\n");
 
@@ -46,17 +45,16 @@ bool ImagePFM::Save(std::string filename) {
         ofs.open(filename, std::ios::binary);
         if (ofs.fail()) throw("Can't open output file");
 
-        // Escreva as informações do cabeçalho no arquivo
+        //write header info to the file , negative value=>little endian
         ofs << "PF\n" << W << " " << H << "\n-1.0\n";
 
-        // Escreva os dados dos pixels no arquivo
-        for (int j = 0; j < H; ++j) {
-            for (int i = 0; i < W; ++i) {
-                // Converta os valores RGB para floats e escreva-os no arquivo
-                // Os valores dos pixels são normalizados para o intervalo [0, 1]
-                float r = static_cast<float>(imagePlane[j * W + i].R) / 255.0f;
-                float g = static_cast<float>(imagePlane[j * W + i].G) / 255.0f;
-                float b = static_cast<float>(imagePlane[j * W + i].B) / 255.0f;
+        // Write pixel data to the file
+        //from bottom to top, from left to right, otherwise the image would be inverted.
+        for (int j = this->H - 1; j >= 0; --j) {
+        for (int i = 0; i < this->W; ++i) {
+                float r = static_cast<float>(imageToSave[j * W + i].val[0]) / 255.0f;
+                float g = static_cast<float>(imageToSave[j * W + i].val[1]) / 255.0f;
+                float b = static_cast<float>(imageToSave[j * W + i].val[2]) / 255.0f;
 
                 ofs.write(reinterpret_cast<char*>(&r), sizeof(float));
                 ofs.write(reinterpret_cast<char*>(&g), sizeof(float));

@@ -1,1 +1,1 @@
-## Pasta com imagens em diferentes formatos.
+## Folder with the different renders created along the project

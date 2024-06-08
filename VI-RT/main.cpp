@@ -10,6 +10,7 @@
 #include "Camera/perspective.hpp"
 #include "Camera/fish_eye.hpp"
 #include "Camera/multiple_cams.hpp"
+#include "Camera/distorcion.hpp"
 #include "Renderer/StandardRenderer.hpp"
 #include "Image/ImagePPM.hpp"
 #include "Image/ImageJPG.hpp"
@@ -107,7 +108,9 @@ int main(int argc, const char * argv[]) {
         multiCam->addCamera(new Perspective(Point(213,425,200), Point(250,30,20), Up, W / 2, H / 2, fovWrad, fovHrad)); //4th image bottom right
         cam = multiCam;
         
-    } else {
+    } else if (CameraType == "BARREL_DISTORTION" || CameraType == "barrel_distortion") {
+        cam = new BarrelDistortion(Eye, At, Up, W, H, 0.5);
+}else {
         cam = new Perspective(Eye, At, Up, W, H, fovWrad, fovHrad);
     }
     

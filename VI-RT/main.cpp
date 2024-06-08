@@ -127,7 +127,7 @@ int main(int argc, const char * argv[]) {
 
 
     // declare the renderer
-    int spp=6;     // samples per pixel
+    int spp=32;     // samples per pixel
     StandardRenderer myRender (cam, &scene, img, shd, spp);
     // render
     start = clock();

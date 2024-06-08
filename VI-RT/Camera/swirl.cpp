@@ -1,8 +1,4 @@
-//
-//  distortion.cpp
-//  VI-RT
-
-#include "distortion.hpp"
+#include "swirl.hpp"
 #include <iostream>
 #include <cmath>
 
@@ -14,7 +10,7 @@ void swirlEffect(float &xc, float &yc, float amount) {
     yc = radius * sin(angle);
 }
 
-bool Distortion::GenerateRay(const int x, const int y, Ray *r, const float *cam_jitter) {
+bool Swirl::GenerateRay(const int x, const int y, Ray *r, const float *cam_jitter) {
     // Camera Space
     float xc, yc;
     if (cam_jitter == NULL) {

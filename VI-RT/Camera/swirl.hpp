@@ -1,23 +1,18 @@
-//
-//  distortion.hpp
-//  VI-RT
-//
-
-#ifndef distortion_hpp
-#define distortion_hpp
+#ifndef swirl_hpp
+#define swirl_hpp
 
 #include "camera.hpp"
 #include "../Rays/ray.hpp"
 #include "../utils/vector.hpp"
 
-class Distortion : public Camera {
+class Swirl : public Camera {
     Point Eye, At;
     Vector Up;
     float fovW, fovH;
     int W, H;
     float c2w[3][3];  // camera to world transform
 public:
-    Distortion(Point Eye, Point At, const Vector Up, const int W, const int H, const float fovW, const float fovH)
+    Swirl(Point Eye, Point At, const Vector Up, const int W, const int H, const float fovW, const float fovH)
         : Eye(Eye), At(At), Up(Up), W(W), H(H), fovW(fovW), fovH(fovH) {
         // compute camera to world transform
         Vector f = Eye.vec2point(At);
@@ -40,4 +35,4 @@ public:
     void getResolution(int *_W, int *_H) { *_W = W; *_H = H; }
 };
 
-#endif /* distortion_hpp */
+#endif

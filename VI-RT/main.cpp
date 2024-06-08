@@ -10,7 +10,7 @@
 #include "Camera/perspective.hpp"
 #include "Camera/fish_eye.hpp"
 #include "Camera/multiple_cams.hpp"
-#include "Camera/distortion.hpp"
+#include "Camera/swirl.hpp"
 #include "Renderer/StandardRenderer.hpp"
 #include "Image/ImagePPM.hpp"
 #include "Image/ImageJPG.hpp"
@@ -30,7 +30,7 @@
 int main(int argc, const char * argv[]) {
     if(argc != 4){
         std::cout << "Usage: " << argv[0] << " <Camera_Type> <format> <output_file>" << std::endl;
-        std::cout << "Camera_Type: FISH_EYE(fish_eye), MULTIPLE_CAMS(multiple_cams), DISTORTION(distortion)" << std::endl;
+        std::cout << "Camera_Type: FISH_EYE(fish_eye), MULTIPLE_CAMS(multiple_cams), SWIRL(swirl)" << std::endl;
         std::cout << "Format: PPM(ppm), PFM(pfm), JPG(jpg), OPENEXR(openexr)" << std::endl;
         std::cout << "Output file should have extension according to the selected format" << std::endl;
         return 1;
@@ -107,8 +107,8 @@ int main(int argc, const char * argv[]) {
         multiCam->addCamera(new Perspective(Point(250,475,550), Point(420,-70,0), Up, W / 2, H / 2, fovWrad, fovHrad)); //3rd image bottom left
         multiCam->addCamera(new Perspective(Point(213,425,200), Point(250,30,20), Up, W / 2, H / 2, fovWrad, fovHrad)); //4th image bottom right
         cam = multiCam;
-    } else if (CameraType == "DISTORTION" || CameraType == "distortion") {
-    cam = new Distortion(Eye, At, Up, W, H, fovWrad, fovHrad);
+    } else if (CameraType == "SWIRL" || CameraType == "swirl") {
+    cam = new Swirl(Eye, At, Up, W, H, fovWrad, fovHrad);
     } else {
         cam = new Perspective(Eye, At, Up, W, H, fovWrad, fovHrad);
     }

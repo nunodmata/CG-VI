@@ -6,6 +6,7 @@
 //
 
 #include "ImageJPG.hpp"
+#include "Uncharted2Tonemap.hpp"
 #include <iostream>
 #include <fstream>
 
@@ -15,16 +16,16 @@ void ImageJPG::ToneMap() {
     // loop over each pixel in the image, calculate luminance, and tone map
     for (int j = 0; j < H; j++) {
         for (int i = 0; i < W; ++i) {
-            // Calculate luminance from RGB values (using approximate luminance weights)
-            float luminance = 0.2126f * imagePlane[j*W+i].R + 0.7152f * imagePlane[j*W+i].G + 0.0722f * imagePlane[j*W+i].B;
+            // Retrieve the original color
+            RGB color = imagePlane[j*W + i];
 
-            // Apply Reinhard tone mapping operator
-            float toneMappedLuminance = luminance / (1.0f + luminance);
+            // Apply Uncharted 2 tone mapping
+            RGB toneMappedColor = Uncharted2Tonemap(color);
 
             // Convert back to RGB
-            imageToSave[j*W+i].val[0] = (unsigned char)(toneMappedLuminance * imagePlane[j*W+i].R / luminance * 255);
-            imageToSave[j*W+i].val[1] = (unsigned char)(toneMappedLuminance * imagePlane[j*W+i].G / luminance * 255);
-            imageToSave[j*W+i].val[2] = (unsigned char)(toneMappedLuminance * imagePlane[j*W+i].B / luminance * 255);
+            imageToSave[j*W + i].val[0] = static_cast<unsigned char>(std::min(1.0f, std::max(0.0f, toneMappedColor.R)) * 255.0f);
+            imageToSave[j*W + i].val[1] = static_cast<unsigned char>(std::min(1.0f, std::max(0.0f, toneMappedColor.G)) * 255.0f);
+            imageToSave[j*W + i].val[2] = static_cast<unsigned char>(std::min(1.0f, std::max(0.0f, toneMappedColor.B)) * 255.0f);
         }
     }
 }

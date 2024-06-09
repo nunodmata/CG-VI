@@ -110,9 +110,9 @@ int main(int argc, const char * argv[]) {
         cam = multiCam;
 
     }else if (CameraType == "DISTORTION" || CameraType == "distortion") {
-    float k1 = 0.08f;  // Small positive value for pincushion distortion
-    float k2 = 0.01f; // Smaller positive value to enhance pincushion distortion towards the edges
-    cam = new Distortion(Eye, At, Up, W, H, fovWrad, fovHrad, k1, k2);
+    float k1 = 0.38f;  // Small positive value for pincushion distortion
+    float k2 = 0.015f; // Smaller positive value to enhance pincushion distortion towards the edges
+    cam = new Distortion(Point(280,275,-500), At, Up, W, H, fovWrad, fovHrad, k1, k2);
 
 } else if (CameraType == "SWIRL" || CameraType == "swirl") {
     cam = new Swirl(Eye, At, Up, W, H, fovWrad, fovHrad);
@@ -134,7 +134,7 @@ int main(int argc, const char * argv[]) {
 
 
     // declare the renderer
-    int spp=4;     // samples per pixel
+    int spp=32;     // samples per pixel
     StandardRenderer myRender (cam, &scene, img, shd, spp);
     // render
     start = clock();

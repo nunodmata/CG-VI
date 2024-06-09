@@ -2,6 +2,7 @@
 #define ImagePFM_hpp
 #include "image.hpp"
 #include <opencv2/opencv.hpp>
+#include "Uncharted2Tonemap.hpp"
 
 class ImagePFM: public Image {
     typedef struct {

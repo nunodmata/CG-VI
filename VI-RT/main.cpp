@@ -14,6 +14,7 @@
 #include "Camera/distortion.hpp"
 #include "Renderer/StandardRenderer.hpp"
 #include "Image/ImagePPM.hpp"
+#include "Image/ImagePPM_original.hpp"
 #include "Image/ImageJPG.hpp"
 #include "Image/ImageEXR.hpp"
 #include "Image/ImagePFM.hpp"
@@ -32,7 +33,7 @@ int main(int argc, const char * argv[]) {
     if(argc != 4){
         std::cout << "Usage: " << argv[0] << " <Camera_Type> <format> <output_file>" << std::endl;
         std::cout << "Camera_Type: FISH_EYE(fish_eye), MULTIPLE_CAMS(multiple_cams),DISTORTION(distortion), SWIRL(swirl)" << std::endl;
-        std::cout << "Format: PPM(ppm), PFM(pfm), JPG(jpg), OPENEXR(openexr)" << std::endl;
+        std::cout << "Format: PPM(ppm), PFM(pfm), JPG(jpg), OPENEXR(openexr), PPMORIGINAL(ppmoriginal)" << std::endl;
         std::cout << "Output file should have extension according to the selected format" << std::endl;
         return 1;
     }
@@ -187,6 +188,15 @@ int main(int argc, const char * argv[]) {
          //OPENEXR
         std::cerr << "Image saved in OPENEXR format: " << FileName << std::endl;
         return 1;
+    } 
+    else if(format == "PPMORIGINAL" || format == "ppmoriginal") { // PPMORIGINAL
+        ImagePPM_original imgPPM_original = ImagePPM_original(*img);
+        // save the image
+        if(!imgPPM_original.Save(FileName)){
+            std::cerr << "Error converting image to PPMORIGINAL format." << std::endl;
+            return 1;
+        }
+        std::cout << "Image converted to PPMORIGINAL format: " << FileName << std::endl;
     }
     else{
         std::cout << "Invalid format" << std::endl;

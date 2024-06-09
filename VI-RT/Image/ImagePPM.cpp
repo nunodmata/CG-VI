@@ -1,43 +1,36 @@
-//
-//  ImagePPM.cpp
-//  VI-RT
-//
-//  Created by Luis Paulo Santos on 09/03/2023.
-//
-
 #include "ImagePPM.hpp"
+#include "Uncharted2Tonemap.hpp"
 #include <iostream>
 #include <fstream>
 
 void ImagePPM::ToneMap() {
     imageToSave = new PPM_pixel[W*H];
 
-    // loop over each pixel in the image, calculate luminance, and tone map
+    // loop over each pixel in the image and tone map
     for (int j = 0; j < H; j++) {
         for (int i = 0; i < W; ++i) {
-            // Calculate luminance from RGB values (using approximate luminance weights)
-            float luminance = 0.2126f * imagePlane[j*W+i].R + 0.7152f * imagePlane[j*W+i].G + 0.0722f * imagePlane[j*W+i].B;
+            // Retrieve the original color
+            RGB color = imagePlane[j*W + i];
 
-            // Apply Reinhard tone mapping operator
-            float toneMappedLuminance = luminance / (1.0f + luminance);
+            // Apply Uncharted 2 tone mapping
+            RGB toneMappedColor = Uncharted2Tonemap(color);
 
-            // Convert back to RGB
-            imageToSave[j*W+i].val[0] = (unsigned char)(toneMappedLuminance * imagePlane[j*W+i].R / luminance * 255);
-            imageToSave[j*W+i].val[1] = (unsigned char)(toneMappedLuminance * imagePlane[j*W+i].G / luminance * 255);
-            imageToSave[j*W+i].val[2] = (unsigned char)(toneMappedLuminance * imagePlane[j*W+i].B / luminance * 255);
+            // Convert to 8-bit color and store in imageToSave
+            imageToSave[j*W + i].val[0] = static_cast<unsigned char>(std::min(1.0f, std::max(0.0f, toneMappedColor.R)) * 255.0f);
+            imageToSave[j*W + i].val[1] = static_cast<unsigned char>(std::min(1.0f, std::max(0.0f, toneMappedColor.G)) * 255.0f);
+            imageToSave[j*W + i].val[2] = static_cast<unsigned char>(std::min(1.0f, std::max(0.0f, toneMappedColor.B)) * 255.0f);
         }
     }
 }
 
-ImagePPM::ImagePPM(Image &img){
+ImagePPM::ImagePPM(Image &img) {
     W = img.getW();
     H = img.getH();
     imagePlane = new RGB[W*H];
     imagePlane = img.getImagePlane();
 }
 
-bool ImagePPM::Save (std::string filename) {
-    
+bool ImagePPM::Save(std::string filename) {
     // convert from float to {0,1,..., 255}
     ToneMap();
     printf("ToneMap\n");
@@ -71,7 +64,4 @@ bool ImagePPM::Save (std::string filename) {
         ofs.close();
         return false;
     }
-
 }
-
-

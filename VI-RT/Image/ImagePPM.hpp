@@ -8,6 +8,7 @@
 #ifndef ImagePPM_hpp
 #define ImagePPM_hpp
 #include "image.hpp"
+#include "Uncharted2Tonemap.hpp"
 
 class ImagePPM: public Image {
     typedef struct {

@@ -2,6 +2,7 @@
 #define ImageEXR_hpp
 
 #include "image.hpp"
+#include "Uncharted2Tonemap.hpp"
 #include <opencv2/opencv.hpp>
 
 class ImageEXR : public Image {

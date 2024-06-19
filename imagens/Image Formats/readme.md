@@ -4,7 +4,7 @@
 
 
 
-JPG             |  PFM         | OpenEXR com ToneMapping                         |  OpenEXR com ToneMapping
+JPG             |  PFM         | OpenEXR **sem ToneMapping**                         |  OpenEXR **com ToneMapping**
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
 ![](JPG.png)          | ![](PFM.png) |  ![](OpenEXR_sem_tonemapping.png)    | ![](OpenEXR_tone_mapped.png)
 

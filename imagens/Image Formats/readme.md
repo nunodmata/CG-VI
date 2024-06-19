@@ -4,8 +4,11 @@
 
 
 
-JPG             |  PPM      |  PFM         | OpenEXR **sem ToneMapping**                         |  OpenEXR **com ToneMapping**
-:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-![](JPG.png)          |    ![](PPM.png)       |  ![](PFM.png) |  ![](OpenEXR_sem_tonemapping.png)    | ![](OpenEXR_tone_mapped.png)
+JPG             |  PPM      |  PFM         | 
+:-------------------------:|:-------------------------:|:-------------------------:|
+![](JPG.png)          |    <img src="PPM.png" width="820">    |  ![](PFM.png) | 
 
 
+OpenEXR **sem ToneMapping**                         |  OpenEXR **com ToneMapping**
+:-------------------------:|:-------------------------:
+ ![](OpenEXR_sem_tonemapping.png)    | ![](OpenEXR_tone_mapped.png)

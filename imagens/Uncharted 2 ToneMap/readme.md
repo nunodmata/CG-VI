@@ -1,6 +1,6 @@
 # Tone Map: Uncharted 2
 
 
-Old Reinhard ToneMap             |  New Uncharted 2 ToneMap        
-:-------------------------:|:-------------------------:
-![](JPG_Reinhard_ToneMap.jpg)          | ![](JPG_Uncharted2_ToneMap.jpg) 
+Initial ToneMap   |  Reinhard Tonemap          |  New Uncharted 2 ToneMap        
+:-------------------------:|:-------------------------:|-------------------------:
+![](original_tone_map.png)     |  ![](reinhard_tonemap.png)   | ![](JPG_Uncharted2_ToneMap.jpg) |
